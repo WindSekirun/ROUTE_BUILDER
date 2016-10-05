@@ -13,7 +13,6 @@ import java.util.Locale;
  * Wrap at https://developers.google.com/android/reference/com/google/android/gms/location/places/Place.html?hl=ko#getLocale()
  */
 public class LocationModel implements Serializable {
-
     @NonNull private String placeId = "";
     private String name = "";
     private String address = "";

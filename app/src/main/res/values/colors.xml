@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <!-- theme color natural -->
+    <color name="natural_thin">#ffa2d47c</color>
+    <color name="natural_normal">#ff7ac143</color>
+    <color name="natural_bold">#ff55872f</color>
+    <color name="natural_highlight">#4d7ac143</color>
+
+    <color name="colorPrimary">@color/natural_normal</color>
+    <color name="colorPrimaryDark">@color/natural_bold</color>
+    <color name="colorAccent">@color/natural_normal</color>
 </resources>

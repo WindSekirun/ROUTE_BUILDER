@@ -2,4 +2,82 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent">
 
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="56dip"
+        android:id="@+id/toolbar"
+        android:background="@color/colorPrimary"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/title"
+        android:layout_below="@+id/toolbar"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="16dip"
+        android:layout_marginRight="16dip"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="10dip"
+        android:hint="제목" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title"
+        android:layout_alignStart="@+id/title"
+        android:layout_alignEnd="@+id/title"
+        android:id="@+id/linearLayout">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="자가용"
+            android:id="@+id/carButton"
+            android:layout_weight="1" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="대중교통"
+            android:id="@+id/publicButton"
+            android:layout_weight="1" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="도보"
+            android:id="@+id/walkButton"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/start"
+        android:layout_below="@+id/linearLayout"
+        android:layout_alignStart="@+id/linearLayout"
+        android:layout_alignEnd="@+id/linearLayout"
+        android:hint="출발지" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/end"
+        android:layout_below="@+id/start"
+        android:layout_alignStart="@+id/start"
+        android:layout_alignEnd="@+id/start"
+        android:hint="도착지" />
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/viaList"
+        android:layout_below="@+id/end"
+        android:layout_alignStart="@+id/end"
+        android:layout_alignEnd="@+id/end"
+        android:layout_marginBottom="10dip"
+        android:layout_marginTop="10dip" />
+
+
 </RelativeLayout>

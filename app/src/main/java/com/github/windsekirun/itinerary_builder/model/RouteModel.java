@@ -16,6 +16,7 @@ public class RouteModel implements Serializable {
     private LocationModel endLocation = null;
     private ArrayList<LocationModel> locationRoutes;
     private Date createdAt;
+    private MoveMethod moveMethod = MoveMethod.CAR;
 
     public Date getCreatedAt() {
         return createdAt;
@@ -24,6 +25,14 @@ public class RouteModel implements Serializable {
     public RouteModel setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
         return this;
+    }
+
+    public MoveMethod getMoveMethod() {
+        return moveMethod;
+    }
+
+    public void setMoveMethod(MoveMethod moveMethod) {
+        this.moveMethod = moveMethod;
     }
 
     public ArrayList<LocationModel> getLocationRoutes() {

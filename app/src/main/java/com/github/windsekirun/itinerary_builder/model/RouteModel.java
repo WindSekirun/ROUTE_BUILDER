@@ -2,6 +2,7 @@ package com.github.windsekirun.itinerary_builder.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * RouteModel
@@ -14,6 +15,16 @@ public class RouteModel implements Serializable {
     private LocationModel startLocation = null;
     private LocationModel endLocation = null;
     private ArrayList<LocationModel> locationRoutes;
+    private Date createdAt;
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public RouteModel setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+        return this;
+    }
 
     public ArrayList<LocationModel> getLocationRoutes() {
         return locationRoutes;

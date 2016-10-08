@@ -7,14 +7,17 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.windsekirun.itinerary_builder.R;
@@ -56,6 +59,7 @@ public class MakeRouteActivity extends AppCompatActivity {
     public final int END_PICK_CODE = 5;
     public final int VIA_PICK_CODE = 6;
 
+    ViaListAdapter adapter;
     LocationModel startLocation;
     LocationModel endLocation;
     ArrayList<LocationModel> viaLocationList = new ArrayList<>();
@@ -155,6 +159,12 @@ public class MakeRouteActivity extends AppCompatActivity {
         if (endLocation != null) {
             end.setText(endLocation.getName() + " (" + endLocation.getAddress() + ") ");
         }
+
+        if (!viaLocationList.isEmpty()) {
+            adapter = new ViaListAdapter(MakeRouteActivity.this, viaLocationList);
+            viaList.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+        }
     }
 
     public LocationModel PlacetoLocationModel(Place place) {
@@ -202,9 +212,47 @@ public class MakeRouteActivity extends AppCompatActivity {
     }
 
     public class ViaListAdapter extends ArrayAdapter<LocationModel> {
+        Context context;
+        ArrayList<LocationModel> itemSet;
+        LayoutInflater inflater;
+        ViewHolder holder;
 
         public ViaListAdapter(Context context, ArrayList<LocationModel> itemSet) {
             super(context, 0, itemSet);
+            this.context = context;
+            this.itemSet = itemSet;
+            inflater = LayoutInflater.from(context);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView = inflater.inflate(R.layout.row_vialist, null, false);
+                holder = new ViewHolder(convertView);
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+
+            LocationModel locationModel = itemSet.get(position);
+
+            if (!locationModel.getName().isEmpty()) {
+                holder.name.setText(locationModel.getName());
+                holder.address.setText(locationModel.getAddress());
+            } else {
+                holder.name.setText(locationModel.getAddress());
+            }
+            return convertView;
+        }
+
+        public class ViewHolder {
+            public TextView name;
+            public TextView address;
+
+            public ViewHolder(View itemView) {
+                name = (TextView) itemView.findViewById(R.id.textView);
+                address = (TextView) itemView.findViewById(R.id.textView2);
+            }
         }
     }
 

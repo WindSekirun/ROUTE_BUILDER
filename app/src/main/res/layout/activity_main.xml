@@ -20,7 +20,8 @@
         android:paddingLeft="@dimen/fab_paddingBottom"
         android:paddingRight="@dimen/fab_paddingBottom"
         android:paddingTop="@dimen/fab_paddingBottom"
-        android:id="@+id/fab" />
+        android:id="@+id/fab"
+        android:src="@drawable/ic_action_content_add" />
 
     <TextView
         android:layout_width="wrap_content"

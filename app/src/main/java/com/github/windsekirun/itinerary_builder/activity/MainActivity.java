@@ -17,8 +17,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
-    @Bind(R.id.toolbar)
-    Toolbar toolbar;
     @Bind(R.id.list)
     ListView list;
     @Bind(R.id.emptyView)
@@ -32,16 +30,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        inflateToolbar();
+        getSupportActionBar().setTitle("경로 빌더");
         inflateFab();
 
         list.setEmptyView(emptyView);
-    }
-
-    public void inflateToolbar() {
-        toolbar.setTitle(R.string.app_name_readable);
-        toolbar.setBackgroundResource(R.color.colorPrimary);
-        toolbar.setTitleTextColor(Material.White._1000.getAsColor());
     }
 
     public void inflateFab() {

@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -16,26 +17,44 @@ public class LocationModel implements Serializable {
     @NonNull private String placeId = "";
     private String name = "";
     private String address = "";
-    private long latitude = 0L;
-    private long longitude = 0L;
+    private double latitude = 0L;
+    private double longitude = 0L;
     private String phoneNumber = "";
     private int priceLevel = 0;
     private Uri webSiteUri = null;
     private Locale locale;
+    private float rating;
+    private List<Integer> placeTypes;
 
-    public int getGetPriceLevel() {
+    public float getRating() {
+        return rating;
+    }
+
+    public int getPriceLevel() {
         return priceLevel;
+    }
+
+    public void setRating(float rating) {
+        this.rating = rating;
+    }
+
+    public List<Integer> getPlaceTypes() {
+        return placeTypes;
+    }
+
+    public void setPlaceTypes(List<Integer> placeTypes) {
+        this.placeTypes = placeTypes;
     }
 
     public Locale getLocale() {
         return locale;
     }
 
-    public long getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
-    public long getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 
@@ -60,48 +79,39 @@ public class LocationModel implements Serializable {
         return webSiteUri;
     }
 
-    public LocationModel setAddress(String address) {
+    public void setAddress(String address) {
         this.address = address;
-        return this;
     }
 
-    public LocationModel setLatitude(long latitude) {
-        this.latitude = latitude;
-        return this;
-    }
-
-    public LocationModel setLocale(Locale locale) {
+    public void setLocale(Locale locale) {
         this.locale = locale;
-        return this;
     }
 
-    public LocationModel setLongitude(long longitude) {
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public void setLongitude(double longitude) {
         this.longitude = longitude;
-        return this;
     }
 
-    public LocationModel setName(String name) {
+    public void setName(String name) {
         this.name = name;
-        return this;
     }
 
-    public LocationModel setPhoneNumber(String phoneNumber) {
+    public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
-        return this;
     }
 
-    public LocationModel setPlaceId(@NonNull String placeId) {
+    public void setPlaceId(@NonNull String placeId) {
         this.placeId = placeId;
-        return this;
     }
 
-    public LocationModel setPriceLevel(int priceLevel) {
+    public void setPriceLevel(int priceLevel) {
         this.priceLevel = priceLevel;
-        return this;
     }
 
-    public LocationModel setWebSiteUri(Uri webSiteUri) {
+    public void setWebSiteUri(Uri webSiteUri) {
         this.webSiteUri = webSiteUri;
-        return this;
     }
 }

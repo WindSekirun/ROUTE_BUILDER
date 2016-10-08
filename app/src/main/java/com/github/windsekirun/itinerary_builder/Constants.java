@@ -9,4 +9,5 @@ public interface Constants {
 
     String LOCATION_MODEL = packageName + withIntent +  "LOCATION_MODEL";
     String ROUTE_MODEL = packageName + withIntent + "ROUTE_MODEL";
+    int GENERAL_CODE = 72;
 }

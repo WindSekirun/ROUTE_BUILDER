@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -52,6 +53,16 @@ public class MainActivity extends AppCompatActivity implements Constants {
         routeStorage = RouteStorageFactory.getInstance(MainActivity.this);
 
         updateList();
+
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                RouteModel routeModel = routeStorage.getRouteModels().get(position);
+                Intent intent = new Intent(MainActivity.this, MakeRouteActivity.class);
+                intent.putExtra(ROUTE_MODEL, routeModel);
+                startActivityForResult(intent, GENERAL_CODE);
+            }
+        });
     }
 
     public void inflateFab() {
@@ -62,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements Constants {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, MakeRouteActivity.class);
-                startActivityForResult(intent, 72);
+                startActivityForResult(intent, GENERAL_CODE);
             }
         });
     }
@@ -118,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements Constants {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (data != null) {
             if (resultCode == RESULT_OK) {
-               if (requestCode == 72) {
+               if (requestCode == GENERAL_CODE) {
                    RouteModel newRouteModel = (RouteModel) data.getSerializableExtra(ROUTE_MODEL);
                    routeStorage.getRouteModels().add(newRouteModel);
                    routeStorage.writeOutChange();

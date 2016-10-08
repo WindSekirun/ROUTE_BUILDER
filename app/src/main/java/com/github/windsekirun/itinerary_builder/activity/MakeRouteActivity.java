@@ -19,9 +19,11 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.windsekirun.itinerary_builder.Constants;
 import com.github.windsekirun.itinerary_builder.R;
 import com.github.windsekirun.itinerary_builder.model.LocationModel;
 import com.github.windsekirun.itinerary_builder.model.MoveMethod;
+import com.github.windsekirun.itinerary_builder.model.RouteModel;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -29,6 +31,7 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -37,7 +40,7 @@ import butterknife.ButterKnife;
  * MakeRouteActivity
  * Created by Pyxis on 2016. 10. 6..
  */
-public class MakeRouteActivity extends AppCompatActivity {
+public class MakeRouteActivity extends AppCompatActivity implements Constants {
     @Bind(R.id.viaList)
     ListView viaList;
     @Bind(R.id.title)
@@ -49,7 +52,7 @@ public class MakeRouteActivity extends AppCompatActivity {
     @Bind(R.id.carButton)
     RadioButton carButton;
     @Bind(R.id.publicButton)
-    RadioButton publicButton;
+    RadioButton busButton;
     @Bind(R.id.walkButton)
     RadioButton walkButton;
 
@@ -61,6 +64,7 @@ public class MakeRouteActivity extends AppCompatActivity {
     LocationModel startLocation;
     LocationModel endLocation;
     ArrayList<LocationModel> viaLocationList = new ArrayList<>();
+    RouteModel routeModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,34 +79,57 @@ public class MakeRouteActivity extends AppCompatActivity {
                 switchRadio(MoveMethod.CAR);
             }
         });
-
-        publicButton.setOnClickListener(new View.OnClickListener() {
+        busButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switchRadio(MoveMethod.PUBLIC);
+                switchRadio(MoveMethod.BUS);
             }
         });
-
         walkButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 switchRadio(MoveMethod.WALK);
             }
         });
-
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startPicker(START_PICK_CODE);
             }
         });
-
         end.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startPicker(END_PICK_CODE);
             }
         });
+
+        carButton.setChecked(true);
+
+        routeModel = (RouteModel) getIntent().getSerializableExtra(ROUTE_MODEL);
+
+        if (routeModel != null) {
+            startLocation = routeModel.getStartLocation();
+            endLocation = routeModel.getEndLocation();
+            viaLocationList = routeModel.getLocationRoutes();
+
+            title.setText(routeModel.getTitle());
+            title.setSelection(title.length());
+
+            switch (routeModel.getMoveMethod()) {
+                case CAR:
+                default:
+                    carButton.setChecked(true);
+                    break;
+                case WALK:
+                    walkButton.setChecked(true);
+                    break;
+                case BUS:
+                    busButton.setChecked(true);
+                    break;
+
+            }
+        }
 
         updateLocation();
     }
@@ -127,6 +154,37 @@ public class MakeRouteActivity extends AppCompatActivity {
 
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void finishWork() {
+        Toast.makeText(MakeRouteActivity.this, R.string.saving_route, Toast.LENGTH_SHORT).show();
+
+        RouteModel routeModel = new RouteModel();
+        if (this.routeModel != null)
+            routeModel = this.routeModel;
+
+        MoveMethod moveMethod;
+        routeModel.setTitle(title.getText().toString());
+        routeModel.setCreatedAt(Calendar.getInstance().getTime());
+        routeModel.setDescription("");
+        routeModel.setEndLocation(endLocation);
+        routeModel.setStartLocation(startLocation);
+        routeModel.setLocationRoutes(viaLocationList);
+
+        if (walkButton.isChecked()) {
+            moveMethod = MoveMethod.WALK;
+        } else if (busButton.isChecked()) {
+            moveMethod = MoveMethod.BUS;
+        } else {
+            moveMethod = MoveMethod.CAR;
+        }
+
+        routeModel.setMoveMethod(moveMethod);
+
+        Intent intent = new Intent();
+        intent.putExtra(ROUTE_MODEL, routeModel);
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
     @SuppressLint("SetTextI18n")
@@ -163,7 +221,8 @@ public class MakeRouteActivity extends AppCompatActivity {
         model.setLocale(place.getLocale());
         model.setPriceLevel(place.getPriceLevel());
         model.setPhoneNumber((String) place.getPhoneNumber());
-        model.setWebSiteUri(place.getWebsiteUri());
+        if (place.getWebsiteUri() != null)
+            model.setWebSiteUri(place.getWebsiteUri().toString());
         model.setRating(place.getRating());
         model.setPlaceTypes(place.getPlaceTypes());
 
@@ -184,13 +243,13 @@ public class MakeRouteActivity extends AppCompatActivity {
 
     public void switchRadio(MoveMethod method) {
         carButton.setChecked(false);
-        publicButton.setChecked(false);
+        busButton.setChecked(false);
         walkButton.setChecked(false);
 
         if (method == MoveMethod.WALK) {
             walkButton.setChecked(true);
-        } else if (method == MoveMethod.PUBLIC) {
-            publicButton.setChecked(true);
+        } else if (method == MoveMethod.BUS) {
+            busButton.setChecked(true);
         } else {
             carButton.setChecked(true);
         }
@@ -263,7 +322,7 @@ public class MakeRouteActivity extends AppCompatActivity {
                 startPicker(VIA_PICK_CODE);
                 break;
             case R.id.menu_added:
-                // TODO: 경로 추가 완료!
+                finishWork();
                 break;
         }
         return super.onOptionsItemSelected(item);

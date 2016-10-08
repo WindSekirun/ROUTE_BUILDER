@@ -21,7 +21,7 @@ public class LocationModel implements Serializable {
     private double longitude = 0L;
     private String phoneNumber = "";
     private int priceLevel = 0;
-    private Uri webSiteUri = null;
+    private String webSiteUri = null;
     private Locale locale;
     private float rating;
     private List<Integer> placeTypes;
@@ -75,7 +75,7 @@ public class LocationModel implements Serializable {
         return placeId;
     }
 
-    public Uri getWebSiteUri() {
+    public String getWebSiteUri() {
         return webSiteUri;
     }
 
@@ -111,7 +111,7 @@ public class LocationModel implements Serializable {
         this.priceLevel = priceLevel;
     }
 
-    public void setWebSiteUri(Uri webSiteUri) {
+    public void setWebSiteUri(String webSiteUri) {
         this.webSiteUri = webSiteUri;
     }
 }

@@ -63,6 +63,17 @@ public class MainActivity extends AppCompatActivity implements Constants {
                 startActivityForResult(intent, GENERAL_CODE);
             }
         });
+
+        list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                routeStorage.getRouteModels().remove(routeStorage.getRouteModels().get(position));
+                routeStorage.writeOutChange();
+
+                updateList();
+                return false;
+            }
+        });
     }
 
     public void inflateFab() {

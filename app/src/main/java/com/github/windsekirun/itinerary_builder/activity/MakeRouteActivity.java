@@ -187,6 +187,7 @@ public class MakeRouteActivity extends AppCompatActivity implements Constants {
 
         Intent intent = new Intent();
         intent.putExtra(ROUTE_MODEL, routeModel);
+
         setResult(RESULT_OK, intent);
         finish();
     }

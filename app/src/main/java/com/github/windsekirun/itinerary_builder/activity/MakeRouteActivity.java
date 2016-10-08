@@ -143,13 +143,13 @@ public class MakeRouteActivity extends AppCompatActivity implements Constants {
         if (data != null) {
             if (resultCode == RESULT_OK) {
                 if (requestCode == START_PICK_CODE) {
-                    final Place place = PlacePicker.getPlace(data, MakeRouteActivity.this);
+                    final Place place = PlacePicker.getPlace(MakeRouteActivity.this, data);
                     startLocation = PlacetoLocationModel(place);
                 } else if (requestCode == END_PICK_CODE) {
-                    final Place place = PlacePicker.getPlace(data, MakeRouteActivity.this);
+                    final Place place = PlacePicker.getPlace(MakeRouteActivity.this, data);
                     endLocation = PlacetoLocationModel(place);
                 } else if (requestCode == VIA_PICK_CODE) {
-                    final Place place = PlacePicker.getPlace(data, MakeRouteActivity.this);
+                    final Place place = PlacePicker.getPlace(MakeRouteActivity.this, data);
                     viaLocationList.add(PlacetoLocationModel(place));
                 }
 
@@ -234,6 +234,7 @@ public class MakeRouteActivity extends AppCompatActivity implements Constants {
         return model;
     }
 
+    @SuppressWarnings("deprecation")
     public void startPicker(int requestCode) {
         try {
             PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
@@ -285,6 +286,7 @@ public class MakeRouteActivity extends AppCompatActivity implements Constants {
             inflater = LayoutInflater.from(context);
         }
 
+        @SuppressLint("InflateParams")
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) {

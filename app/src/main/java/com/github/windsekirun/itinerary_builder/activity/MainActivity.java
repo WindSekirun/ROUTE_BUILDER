@@ -1,11 +1,11 @@
 package com.github.windsekirun.itinerary_builder.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +16,10 @@ import android.widget.TextView;
 
 import com.github.windsekirun.itinerary_builder.Constants;
 import com.github.windsekirun.itinerary_builder.R;
-import com.github.windsekirun.itinerary_builder.model.LocationModel;
 import com.github.windsekirun.itinerary_builder.model.RouteModel;
 import com.github.windsekirun.itinerary_builder.storage.RouteStorage;
 import com.github.windsekirun.itinerary_builder.storage.RouteStorageFactory;
 import com.melnykov.fab.FloatingActionButton;
-import com.mikepenz.materialize.color.Material;
 
 import java.util.ArrayList;
 
@@ -39,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements Constants {
     RouteStorage routeStorage;
     RouteListAdapter adapter;
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements Constants {
             inflater = LayoutInflater.from(context);
         }
 
+        @SuppressLint("InflateParams")
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
@@ -140,13 +140,13 @@ public class MainActivity extends AppCompatActivity implements Constants {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (data != null) {
             if (resultCode == RESULT_OK) {
-               if (requestCode == GENERAL_CODE) {
-                   RouteModel newRouteModel = (RouteModel) data.getSerializableExtra(ROUTE_MODEL);
-                   routeStorage.getRouteModels().add(newRouteModel);
-                   routeStorage.writeOutChange();
+                if (requestCode == GENERAL_CODE) {
+                    RouteModel newRouteModel = (RouteModel) data.getSerializableExtra(ROUTE_MODEL);
+                    routeStorage.getRouteModels().add(newRouteModel);
+                    routeStorage.writeOutChange();
 
-                   updateList();
-               }
+                    updateList();
+                }
             }
         }
         super.onActivityResult(requestCode, resultCode, data);

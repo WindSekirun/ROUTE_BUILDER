@@ -45,6 +45,8 @@ public class MakeRouteActivity extends AppCompatActivity implements Constants {
     ListView viaList;
     @Bind(R.id.title)
     EditText title;
+    @Bind(R.id.description)
+    EditText description;
     @Bind(R.id.start)
     EditText start;
     @Bind(R.id.end)
@@ -116,6 +118,9 @@ public class MakeRouteActivity extends AppCompatActivity implements Constants {
             title.setText(routeModel.getTitle());
             title.setSelection(title.length());
 
+            description.setText(routeModel.getDescription());
+            description.setSelection(description.length());
+
             switch (routeModel.getMoveMethod()) {
                 case CAR:
                 default:
@@ -127,7 +132,6 @@ public class MakeRouteActivity extends AppCompatActivity implements Constants {
                 case BUS:
                     busButton.setChecked(true);
                     break;
-
             }
         }
 
@@ -166,7 +170,7 @@ public class MakeRouteActivity extends AppCompatActivity implements Constants {
         MoveMethod moveMethod;
         routeModel.setTitle(title.getText().toString());
         routeModel.setCreatedAt(Calendar.getInstance().getTime());
-        routeModel.setDescription("");
+        routeModel.setDescription(description.getText().toString());
         routeModel.setEndLocation(endLocation);
         routeModel.setStartLocation(startLocation);
         routeModel.setLocationRoutes(viaLocationList);
@@ -322,7 +326,11 @@ public class MakeRouteActivity extends AppCompatActivity implements Constants {
                 startPicker(VIA_PICK_CODE);
                 break;
             case R.id.menu_added:
-                finishWork();
+                if (!title.getText().toString().isEmpty()) {
+                    finishWork();
+                } else {
+                    Toast.makeText(MakeRouteActivity.this, R.string.enter_the_title, Toast.LENGTH_SHORT).show();
+                }
                 break;
         }
         return super.onOptionsItemSelected(item);

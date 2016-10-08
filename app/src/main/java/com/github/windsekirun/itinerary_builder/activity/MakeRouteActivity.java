@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -103,6 +104,16 @@ public class MakeRouteActivity extends AppCompatActivity implements Constants {
             @Override
             public void onClick(View v) {
                 startPicker(END_PICK_CODE);
+            }
+        });
+
+        viaList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                viaLocationList.remove(viaLocationList.get(position));
+
+                updateLocation();
+                return false;
             }
         });
 

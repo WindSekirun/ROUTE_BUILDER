@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,7 +27,6 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
-import com.mikepenz.materialize.color.Material;
 
 import java.util.ArrayList;
 
@@ -95,30 +93,14 @@ public class MakeRouteActivity extends AppCompatActivity {
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
-                    Intent intent = intentBuilder.build(MakeRouteActivity.this);
-                    startActivityForResult(intent, START_PICK_CODE);
-                } catch (GooglePlayServicesRepairableException e) {
-                    GooglePlayServicesUtil.getErrorDialog(e.getConnectionStatusCode(), MakeRouteActivity.this, 0);
-                } catch (GooglePlayServicesNotAvailableException e) {
-                    Toast.makeText(MakeRouteActivity.this, "Google Play Services is not available.", Toast.LENGTH_LONG).show();
-                }
+                startPicker(START_PICK_CODE);
             }
         });
 
         end.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
-                    Intent intent = intentBuilder.build(MakeRouteActivity.this);
-                    startActivityForResult(intent, END_PICK_CODE);
-                } catch (GooglePlayServicesRepairableException e) {
-                    GooglePlayServicesUtil.getErrorDialog(e.getConnectionStatusCode(), MakeRouteActivity.this, 0);
-                } catch (GooglePlayServicesNotAvailableException e) {
-                    Toast.makeText(MakeRouteActivity.this, "Google Play Services is not available.", Toast.LENGTH_LONG).show();
-                }
+                startPicker(END_PICK_CODE);
             }
         });
 
@@ -135,6 +117,9 @@ public class MakeRouteActivity extends AppCompatActivity {
                 } else if (requestCode == END_PICK_CODE) {
                     final Place place = PlacePicker.getPlace(data, MakeRouteActivity.this);
                     endLocation = PlacetoLocationModel(place);
+                } else if (requestCode == VIA_PICK_CODE) {
+                    final Place place = PlacePicker.getPlace(data, MakeRouteActivity.this);
+                    viaLocationList.add(PlacetoLocationModel(place));
                 }
 
                 updateLocation();
@@ -183,6 +168,18 @@ public class MakeRouteActivity extends AppCompatActivity {
         model.setPlaceTypes(place.getPlaceTypes());
 
         return model;
+    }
+
+    public void startPicker(int requestCode) {
+        try {
+            PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
+            Intent intent = intentBuilder.build(MakeRouteActivity.this);
+            startActivityForResult(intent, requestCode);
+        } catch (GooglePlayServicesRepairableException e) {
+            GooglePlayServicesUtil.getErrorDialog(e.getConnectionStatusCode(), MakeRouteActivity.this, 0);
+        } catch (GooglePlayServicesNotAvailableException e) {
+            Toast.makeText(MakeRouteActivity.this, R.string.gps_not_available, Toast.LENGTH_LONG).show();
+        }
     }
 
     public void switchRadio(MoveMethod method) {
@@ -263,7 +260,7 @@ public class MakeRouteActivity extends AppCompatActivity {
                 onBackPressed();
                 break;
             case R.id.menu_add_via:
-                // TODO: 경유지 추가
+                startPicker(VIA_PICK_CODE);
                 break;
             case R.id.menu_added:
                 // TODO: 경로 추가 완료!

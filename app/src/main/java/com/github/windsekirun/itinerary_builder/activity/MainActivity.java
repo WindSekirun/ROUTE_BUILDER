@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.windsekirun.itinerary_builder.Constants;
 import com.github.windsekirun.itinerary_builder.R;
 import com.github.windsekirun.itinerary_builder.model.RouteModel;
@@ -56,20 +57,36 @@ public class MainActivity extends AppCompatActivity implements Constants {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                RouteModel routeModel = routeStorage.getRouteModels().get(position);
-                Intent intent = new Intent(MainActivity.this, MakeRouteActivity.class);
-                intent.putExtra(ROUTE_MODEL, routeModel);
-                startActivityForResult(intent, GENERAL_CODE);
+                // TODO: 길찾기 페이지 표시
             }
         });
 
         list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                routeStorage.getRouteModels().remove(routeStorage.getRouteModels().get(position));
-                routeStorage.writeOutChange();
+                String[] items = new String[] { "수정", "삭제"};
+                new MaterialDialog.Builder(MainActivity.this)
+                        .items(items)
+                        .itemsCallback(new MaterialDialog.ListCallback() {
+                            @Override
+                            public void onSelection(MaterialDialog dialog, View itemView, int position, CharSequence text) {
+                                switch (position) {
+                                    case 0:
+                                        RouteModel routeModel = routeStorage.getRouteModels().get(position);
+                                        Intent intent = new Intent(MainActivity.this, MakeRouteActivity.class);
+                                        intent.putExtra(ROUTE_MODEL, routeModel);
+                                        startActivityForResult(intent, GENERAL_CODE);
+                                        break;
+                                    case 1:
+                                        routeStorage.getRouteModels().remove(routeStorage.getRouteModels().get(position));
+                                        routeStorage.writeOutChange();
 
-                updateList();
+                                        updateList();
+                                        break;
+
+                                }
+                            }
+                        }).show();
                 return false;
             }
         });

@@ -36,9 +36,12 @@
             android:name=".activity.MakeRouteActivity"
             android:screenOrientation="portrait" />
 
+        <activity android:name=".activity.MapsActivity"
+            android:screenOrientation="portrait"/>
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBfPNZBN7X4s928IY7s1SVMn_HR3Rfx6M0" />
+            android:value="AIzaSyBZJc9mdB0raxLB416qBFrywCP55Cv8yVE" />
     </application>
 
 </manifest>

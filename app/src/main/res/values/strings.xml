@@ -5,4 +5,5 @@
     <string name="gps_not_available">Google Play Services is not available.</string>
     <string name="saving_route">경로를 저장중입니다.</string>
     <string name="enter_the_title">제목을 입력해주세요.</string>
+    <string name="fetching_from_data">Fetching from Data...</string>
 </resources>

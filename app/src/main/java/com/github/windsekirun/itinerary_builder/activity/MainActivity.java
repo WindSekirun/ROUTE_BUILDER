@@ -57,14 +57,17 @@ public class MainActivity extends AppCompatActivity implements Constants {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // TODO: 길찾기 페이지 표시
+                RouteModel routeModel = routeStorage.getRouteModels().get(position);
+                Intent intent = new Intent(MainActivity.this, MapsActivity.class);
+                intent.putExtra(ROUTE_MODEL, routeModel);
+                startActivity(intent);
             }
         });
 
         list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                String[] items = new String[] { "수정", "삭제"};
+                String[] items = new String[] {"수정", "삭제"};
                 new MaterialDialog.Builder(MainActivity.this)
                         .items(items)
                         .itemsCallback(new MaterialDialog.ListCallback() {
@@ -87,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements Constants {
                                 }
                             }
                         }).show();
-                return false;
+                return true;
             }
         });
     }

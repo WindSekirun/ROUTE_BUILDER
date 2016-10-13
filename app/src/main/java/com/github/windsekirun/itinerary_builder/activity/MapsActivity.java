@@ -98,6 +98,8 @@ public class MapsActivity extends AppCompatActivity
             getSupportFragmentManager().beginTransaction().replace(R.id.map, mapFragment).commit();
         }
 
+        mapFragment.getMapAsync(this);
+
         progressDialog = new MaterialDialog.Builder(MapsActivity.this)
                 .content(R.string.fetching_from_data)
                 .progress(true, 0)
@@ -106,11 +108,22 @@ public class MapsActivity extends AppCompatActivity
                 .build();
 
         progressDialog.show();
+    }
+
+    public void routingProcess() {
+        CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(start.latitude, end.longitude));
+        CameraUpdate zoom = CameraUpdateFactory.zoomTo(8);
+
+        map.moveCamera(center);
+        map.animateCamera(zoom);
+
+        boolean optimize = wayPoints.size() > 2;
 
         Routing routing = new Routing.Builder()
-                .travelMode(AbstractRouting.TravelMode.DRIVING)
+                .travelMode(AbstractRouting.TravelMode.TRANSIT)
                 .withListener(this)
-                .alternativeRoutes(true)
+                .alternativeRoutes(false)
+                .optimize(optimize)
                 .waypoints(wayPoints)
                 .key(API_KEY)
                 .build();
@@ -200,5 +213,7 @@ public class MapsActivity extends AppCompatActivity
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.map = googleMap;
+
+        routingProcess();
     }
 }

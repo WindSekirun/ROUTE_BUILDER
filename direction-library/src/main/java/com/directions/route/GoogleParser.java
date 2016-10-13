@@ -42,6 +42,7 @@ public class GoogleParser extends XMLParser implements Parser {
 
         // turn the stream into a string
         final String result = convertStreamToString(this.getInputStream());
+        Log.e("parse-Result", result + "");
         if (result == null) {
             throw new RouteException("Result is null");
         }
@@ -72,15 +73,15 @@ public class GoogleParser extends XMLParser implements Parser {
 
                 //Get the leg, only one leg as we don't support waypoints
                 final JSONObject leg = jsonRoute.getJSONArray("legs").getJSONObject(0);
-                //Get the steps for this leg
+
                 final JSONArray steps = leg.getJSONArray("steps");
-                //Number of steps for use in for loop
+
                 final int numSteps = steps.length();
-                //Set the name of this route using the start & end addresses
+
                 route.setName(leg.getString("start_address") + " to " + leg.getString("end_address"));
-                //Get google's copyright notice (tos requirement)
+
                 route.setCopyright(jsonRoute.getString("copyrights"));
-                //Get distance and time estimation
+
                 route.setDurationText(leg.getJSONObject("duration").getString("text"));
                 route.setDurationValue(leg.getJSONObject("duration").getInt(VALUE));
                 route.setDistanceText(leg.getJSONObject(DISTANCE).getString("text"));

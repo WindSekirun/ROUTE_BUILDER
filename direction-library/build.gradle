@@ -1,0 +1,24 @@
+apply plugin: 'com.android.library'
+
+dependencies {
+    compile fileTree(dir: 'libs', include: '*.jar')
+    compile 'com.google.android.gms:play-services-maps:9.6.1'
+}
+// This is the library version used when deploying the artifact
+version = "1.0.9"
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion "24.0.3"
+
+    defaultConfig {
+        minSdkVersion 10
+        targetSdkVersion 24
+    }
+}
+
+
+
+def siteUrl = 'https://github.com/jd-alexander/Google-Directions-Android'      // Homepage URL of the library
+def gitUrl = 'https://github.com/jd-alexander/Google-Directions-Android.git'   // Git repository URL
+group = "com.github.jd-alexander"                      // Maven Group ID for the artifact

@@ -26,7 +26,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
@@ -113,7 +112,7 @@ public class MapsActivity extends AppCompatActivity
                 .withListener(this)
                 .alternativeRoutes(true)
                 .waypoints(wayPoints)
-                .key(BROWSER_API_KEY)
+                .key(API_KEY)
                 .build();
 
         routing.execute();
@@ -151,7 +150,7 @@ public class MapsActivity extends AppCompatActivity
     }
 
     @Override
-    public void onRoutingSuccess(ArrayList<Route> route, int shortestRouteIndex) {
+    public void onRoutingSuccess(List<Route> route, int shortestRouteIndex) {
         progressDialog.dismiss();
         CameraUpdate center = CameraUpdateFactory.newLatLng(start);
         CameraUpdate zoom = CameraUpdateFactory.zoomTo(16);

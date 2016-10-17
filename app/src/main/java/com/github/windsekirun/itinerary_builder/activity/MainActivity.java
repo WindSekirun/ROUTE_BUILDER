@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements Constants {
 
         list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int pos, long id) {
                 String[] items = new String[] {"수정", "삭제"};
                 new MaterialDialog.Builder(MainActivity.this)
                         .items(items)
@@ -75,13 +75,14 @@ public class MainActivity extends AppCompatActivity implements Constants {
                             public void onSelection(MaterialDialog dialog, View itemView, int position, CharSequence text) {
                                 switch (position) {
                                     case 0:
-                                        RouteModel routeModel = routeStorage.getRouteModels().get(position);
+                                        RouteModel routeModel = routeStorage.getRouteModels().get(pos);
                                         Intent intent = new Intent(MainActivity.this, MakeRouteActivity.class);
                                         intent.putExtra(ROUTE_MODEL, routeModel);
+                                        intent.putExtra(CURSOR, pos);
                                         startActivityForResult(intent, GENERAL_CODE);
                                         break;
                                     case 1:
-                                        routeStorage.getRouteModels().remove(routeStorage.getRouteModels().get(position));
+                                        routeStorage.getRouteModels().remove(routeStorage.getRouteModels().get(pos));
                                         routeStorage.writeOutChange();
 
                                         updateList();
@@ -162,7 +163,8 @@ public class MainActivity extends AppCompatActivity implements Constants {
             if (resultCode == RESULT_OK) {
                 if (requestCode == GENERAL_CODE) {
                     RouteModel newRouteModel = (RouteModel) data.getSerializableExtra(ROUTE_MODEL);
-                    routeStorage.getRouteModels().add(newRouteModel);
+                    int cursor = data.getIntExtra(CURSOR, 0);
+                    routeStorage.getRouteModels().set(cursor, newRouteModel);
                     routeStorage.writeOutChange();
 
                     updateList();

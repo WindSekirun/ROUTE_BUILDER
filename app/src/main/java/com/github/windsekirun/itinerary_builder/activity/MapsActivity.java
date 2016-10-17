@@ -120,9 +120,9 @@ public class MapsActivity extends AppCompatActivity
         boolean optimize = wayPoints.size() > 2;
 
         Routing routing = new Routing.Builder()
-                .travelMode(AbstractRouting.TravelMode.TRANSIT)
+                .travelMode(AbstractRouting.TravelMode.DRIVING)
                 .withListener(this)
-                .alternativeRoutes(false)
+                .alternativeRoutes(true)
                 .optimize(optimize)
                 .waypoints(wayPoints)
                 .key(API_KEY)
@@ -188,8 +188,6 @@ public class MapsActivity extends AppCompatActivity
             polyOptions.addAll(route.get(i).getPoints());
             Polyline polyline = map.addPolyline(polyOptions);
             polylines.add(polyline);
-
-            Toast.makeText(getApplicationContext(), "Route " + (i + 1) + ": distance - " + route.get(i).getDistanceValue() + ": duration - " + route.get(i).getDurationValue(), Toast.LENGTH_SHORT).show();
         }
 
         // Start marker

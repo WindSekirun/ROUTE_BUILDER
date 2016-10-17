@@ -62,6 +62,7 @@ public class MakeRouteActivity extends AppCompatActivity implements Constants {
     public final int START_PICK_CODE = 4;
     public final int END_PICK_CODE = 5;
     public final int VIA_PICK_CODE = 6;
+    public int cursor = 0;
 
     ViaListAdapter adapter;
     LocationModel startLocation;
@@ -144,6 +145,8 @@ public class MakeRouteActivity extends AppCompatActivity implements Constants {
                     busButton.setChecked(true);
                     break;
             }
+
+            cursor = getIntent().getIntExtra(CURSOR, 0);
         }
 
         updateLocation();
@@ -174,6 +177,12 @@ public class MakeRouteActivity extends AppCompatActivity implements Constants {
     public void finishWork() {
         Toast.makeText(MakeRouteActivity.this, R.string.saving_route, Toast.LENGTH_SHORT).show();
 
+        boolean isChangeMethods = false;
+
+        if (this.routeModel != null) {
+            isChangeMethods = true;
+        }
+
         RouteModel routeModel = new RouteModel();
         if (this.routeModel != null)
             routeModel = this.routeModel;
@@ -198,6 +207,9 @@ public class MakeRouteActivity extends AppCompatActivity implements Constants {
 
         Intent intent = new Intent();
         intent.putExtra(ROUTE_MODEL, routeModel);
+        if (isChangeMethods) {
+            intent.putExtra(CURSOR, cursor);
+        }
 
         setResult(RESULT_OK, intent);
         finish();

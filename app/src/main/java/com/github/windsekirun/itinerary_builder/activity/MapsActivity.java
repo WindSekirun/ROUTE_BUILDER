@@ -172,7 +172,7 @@ public class MapsActivity extends AppCompatActivity
     public void onRoutingSuccess(List<Route> route, int shortestRouteIndex) {
         progressDialog.dismiss();
         CameraUpdate center = CameraUpdateFactory.newLatLng(start);
-        CameraUpdate zoom = CameraUpdateFactory.zoomTo(24);
+        CameraUpdate zoom = CameraUpdateFactory.zoomTo(12);
 
         map.moveCamera(center);
         map.moveCamera(zoom);

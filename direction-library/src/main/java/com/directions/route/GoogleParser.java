@@ -15,13 +15,19 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * Parses a url pointing to a Google JSON object to a Route object.
+ *
+ * Some Edit by FIXME @WindSekirun
+ * @return a Route object based on the JSON object by Haseem Saheed
+ */
+
 public class GoogleParser extends XMLParser implements Parser {
 
     private static final String VALUE = "value";
     private static final String DISTANCE = "distance";
-    /**
-     * Distance covered. *
-     */
+
     private int distance;
 
     /* Status code returned when the request succeeded */
@@ -31,11 +37,6 @@ public class GoogleParser extends XMLParser implements Parser {
         super(feedUrl);
     }
 
-    /**
-     * Parses a url pointing to a Google JSON object to a Route object.
-     *
-     * @return a Route object based on the JSON object by Haseem Saheed
-     */
 
     public final List<Route> parse() throws RouteException {
         List<Route> routes = new ArrayList<>();
@@ -71,12 +72,25 @@ public class GoogleParser extends XMLParser implements Parser {
                     route.setWarning(jsonRoute.getJSONArray("warnings").getString(0));
                 }
 
+                /*
+                if (!jsonRoute.getJSONArray("waypoint_order").isNull(0)) {
+                    JSONArray wayOrderArray = jsonRoute.getJSONArray("waypoint_order");
+                    int size = wayOrderArray.length();
+                    int[] wayPointOrder = new int[]{};
+                    for (int z = 0; z < size; z++) {
+                        wayPointOrder[z] = wayOrderArray.getInt(z);
+                    }
+
+                    route.setWaypointOrder(wayPointOrder);
+                }
+                */
+
                 route.setLatLgnBounds(new LatLng(jsonNortheast.getDouble("lat"), jsonNortheast.getDouble("lng")), new LatLng(jsonSouthwest.getDouble("lat"), jsonSouthwest.getDouble("lng")));
 
-                // TODO: leg for-loop
                 final JSONArray legs = jsonRoute.getJSONArray("legs");
 
                 final int legSize = legs.length();
+
                 for (int j = 0; j < legSize; j++) {
                     final JSONObject leg = jsonRoute.getJSONArray("legs").getJSONObject(j);
 
@@ -112,9 +126,10 @@ public class GoogleParser extends XMLParser implements Parser {
                         route.addPoints(decodePolyLine(step.getJSONObject("polyline").getString("points")));
                         route.addSegment(segment.copy());
                     }
-
-                    routes.add(route);
                 }
+
+
+                routes.add(route);
             }
 
         } catch (JSONException e) {
@@ -122,13 +137,6 @@ public class GoogleParser extends XMLParser implements Parser {
         }
         return routes;
     }
-
-    /**
-     * Convert an inputstream to a string.
-     *
-     * @param input inputstream to convert.
-     * @return a String of the inputstream.
-     */
 
     private static String convertStreamToString(final InputStream input) {
         if (input == null) return null;
@@ -153,13 +161,6 @@ public class GoogleParser extends XMLParser implements Parser {
         }
         return sBuf.toString();
     }
-
-    /**
-     * Decode a polyline string into a list of GeoPoints.
-     *
-     * @param poly polyline encoded string to decode.
-     * @return the list of GeoPoints represented by this polystring.
-     */
 
     private List<LatLng> decodePolyLine(final String poly) {
         int len = poly.length();

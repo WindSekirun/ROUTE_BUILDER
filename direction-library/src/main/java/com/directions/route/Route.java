@@ -24,6 +24,15 @@ public class Route {
     private int distanceValue;
     private String endAddressText;
     private PolylineOptions polyOptions;
+    private int[] waypointOrder;
+
+    public int[] getWaypointOrder() {
+        return waypointOrder;
+    }
+
+    public void setWaypointOrder(int[] waypointOrder) {
+        this.waypointOrder = waypointOrder;
+    }
 
     public PolylineOptions getPolyOptions() {
         return polyOptions;

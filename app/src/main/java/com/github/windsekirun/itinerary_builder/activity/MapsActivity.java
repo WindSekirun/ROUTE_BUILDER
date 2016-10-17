@@ -52,8 +52,12 @@ public class MapsActivity extends AppCompatActivity
 
     protected GoogleApiClient mGoogleApiClient;
     protected List<Polyline> polylines;
-    protected static final int[] COLORS = new int[]
-            {R.color.primary_dark, R.color.primary, R.color.primary_light, R.color.accent, R.color.primary_dark_material_light};
+    protected static final int[] COLORS = new int[] {
+            R.color.main_route_1,
+            R.color.main_route_2,
+            R.color.main_route_3,
+            R.color.main_route_4,
+            R.color.main_route_5};
 
     RouteModel routeModel;
     MaterialDialog progressDialog;
@@ -70,6 +74,8 @@ public class MapsActivity extends AppCompatActivity
         routeModel = (RouteModel) getIntent().getSerializableExtra(ROUTE_MODEL);
         start = new LatLng(routeModel.getStartLocation().getLatitude(), routeModel.getStartLocation().getLongitude());
         end = new LatLng(routeModel.getEndLocation().getLatitude(), routeModel.getEndLocation().getLongitude());
+
+        getSupportActionBar().setTitle(routeModel.getTitle());
 
         for (LocationModel points : routeModel.getLocationRoutes()) {
             wayPoints.add(new LatLng(points.getLatitude(), points.getLongitude()));
@@ -166,7 +172,7 @@ public class MapsActivity extends AppCompatActivity
     public void onRoutingSuccess(List<Route> route, int shortestRouteIndex) {
         progressDialog.dismiss();
         CameraUpdate center = CameraUpdateFactory.newLatLng(start);
-        CameraUpdate zoom = CameraUpdateFactory.zoomTo(16);
+        CameraUpdate zoom = CameraUpdateFactory.zoomTo(20);
 
         map.moveCamera(center);
 
@@ -178,7 +184,6 @@ public class MapsActivity extends AppCompatActivity
 
         polylines = new ArrayList<>();
         for (int i = 0; i < route.size(); i++) {
-
             //In case of more than 5 alternative routes
             int colorIndex = i % COLORS.length;
 
@@ -193,13 +198,11 @@ public class MapsActivity extends AppCompatActivity
         // Start marker
         MarkerOptions options = new MarkerOptions();
         options.position(start);
-        //options.icon(BitmapDescriptorFactory.fromResource(R.drawable.start_blue));
         map.addMarker(options);
 
         // End marker
         options = new MarkerOptions();
         options.position(end);
-        //options.icon(BitmapDescriptorFactory.fromResource(R.drawable.end_green));
         map.addMarker(options);
     }
 

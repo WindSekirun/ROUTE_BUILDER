@@ -207,8 +207,10 @@ public class MakeRouteActivity extends AppCompatActivity implements Constants {
 
         Intent intent = new Intent();
         intent.putExtra(ROUTE_MODEL, routeModel);
+        Integer intentCursor = cursor;
+
         if (isChangeMethods) {
-            intent.putExtra(CURSOR, cursor);
+            intent.putExtra(CURSOR, intentCursor);
         }
 
         setResult(RESULT_OK, intent);

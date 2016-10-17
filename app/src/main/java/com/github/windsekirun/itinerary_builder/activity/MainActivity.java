@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements Constants {
         list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int pos, long id) {
-                String[] items = new String[] {"수정", "삭제"};
+                String[] items = new String[]{"수정", "삭제"};
                 new MaterialDialog.Builder(MainActivity.this)
                         .items(items)
                         .itemsCallback(new MaterialDialog.ListCallback() {
@@ -163,8 +163,11 @@ public class MainActivity extends AppCompatActivity implements Constants {
             if (resultCode == RESULT_OK) {
                 if (requestCode == GENERAL_CODE) {
                     RouteModel newRouteModel = (RouteModel) data.getSerializableExtra(ROUTE_MODEL);
-                    int cursor = data.getIntExtra(CURSOR, 0);
-                    routeStorage.getRouteModels().set(cursor, newRouteModel);
+                    Integer cursor = (Integer) data.getSerializableExtra(CURSOR);
+                    if (cursor != null)
+                        routeStorage.getRouteModels().set(cursor, newRouteModel);
+                    else
+                        routeStorage.getRouteModels().add(newRouteModel);
                     routeStorage.writeOutChange();
 
                     updateList();

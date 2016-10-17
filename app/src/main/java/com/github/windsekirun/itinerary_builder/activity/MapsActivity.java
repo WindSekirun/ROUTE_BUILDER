@@ -172,9 +172,10 @@ public class MapsActivity extends AppCompatActivity
     public void onRoutingSuccess(List<Route> route, int shortestRouteIndex) {
         progressDialog.dismiss();
         CameraUpdate center = CameraUpdateFactory.newLatLng(start);
-        CameraUpdate zoom = CameraUpdateFactory.zoomTo(20);
+        CameraUpdate zoom = CameraUpdateFactory.zoomTo(24);
 
         map.moveCamera(center);
+        map.moveCamera(zoom);
 
         if (polylines.size() > 0) {
             for (Polyline poly : polylines) {
@@ -184,7 +185,6 @@ public class MapsActivity extends AppCompatActivity
 
         polylines = new ArrayList<>();
         for (int i = 0; i < route.size(); i++) {
-            //In case of more than 5 alternative routes
             int colorIndex = i % COLORS.length;
 
             PolylineOptions polyOptions = new PolylineOptions();

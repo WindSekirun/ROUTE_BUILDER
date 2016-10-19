@@ -133,6 +133,7 @@ public abstract class AbstractRouting extends AsyncTask<Void, Void, List<Route>>
     @Override
     protected void onPostExecute(List<Route> result) {
         if (!result.isEmpty()) {
+            /*
             int shortestRouteIndex = 0;
             int minDistance = Integer.MAX_VALUE;
 
@@ -151,7 +152,11 @@ public abstract class AbstractRouting extends AsyncTask<Void, Void, List<Route>>
                 }
                 result.get(i).setPolyOptions(mOptions);
             }
-            dispatchOnSuccess(result, shortestRouteIndex);
+            */
+
+            // FIXME @WindSekirun i don't think this is needed process, this process is just define
+            // what is shortest route. but we use wayPoint-Optimize.
+            dispatchOnSuccess(result, 0);
         } else {
             dispatchOnFailure(mException);
         }

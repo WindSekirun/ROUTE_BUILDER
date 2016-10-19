@@ -167,7 +167,7 @@ public class MapsActivity extends AppCompatActivity
 
     // TODO: TPS 자체 시스템을 생각해보면, 목적은 경유지 최적화로 인한 경로 안내다.
     // TODO: 그러면 A to B 라는 방식을 지원해야 되는가?
-    // TODO: 그렇지 않다면, 루트로 나눠서 처리하는 것 보다는 Segment 자체를 분할시키는 것이 좋을 것 같다.
+    // TODO: 그렇지 않다면, 루트로 나눠서 처리하는 것 보다는 '''Segment 자체를 분할시키는 것이 좋을 것''' 같다.
     @Override
     public void onRoutingSuccess(List<Route> route, int shortestRouteIndex) {
         progressDialog.dismiss();
@@ -181,18 +181,6 @@ public class MapsActivity extends AppCompatActivity
             for (Polyline poly : polylines) {
                 poly.remove();
             }
-        }
-
-        polylines = new ArrayList<>();
-        for (int i = 0; i < route.size(); i++) {
-            int colorIndex = i % COLORS.length;
-
-            PolylineOptions polyOptions = new PolylineOptions();
-            polyOptions.color(getResources().getColor(COLORS[colorIndex]));
-            polyOptions.width(10 + i * 3);
-            polyOptions.addAll(route.get(i).getPoints());
-            Polyline polyline = map.addPolyline(polyOptions);
-            polylines.add(polyline);
         }
 
         // Start marker

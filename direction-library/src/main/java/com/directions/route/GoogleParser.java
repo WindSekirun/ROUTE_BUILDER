@@ -29,6 +29,7 @@ public class GoogleParser extends XMLParser implements Parser {
     private static final String DISTANCE = "distance";
 
     private int distance;
+    private int duration;
 
     private static final String OK = "OK";
 
@@ -55,10 +56,12 @@ public class GoogleParser extends XMLParser implements Parser {
 
             JSONArray jsonRoutes = json.getJSONArray("routes");
 
+            // 루트가 여러개일 경우 여러개를 리턴해야 함.
             for (int i = 0; i < jsonRoutes.length(); i++) {
                 Route route = new Route();
-                Segment segment = new Segment();
+                distance = 0;
 
+                // 공통 정보
                 JSONObject jsonRoute = jsonRoutes.getJSONObject(i);
                 final JSONObject jsonBounds = jsonRoute.getJSONObject("bounds");
                 final JSONObject jsonNortheast = jsonBounds.getJSONObject("northeast");
@@ -83,48 +86,71 @@ public class GoogleParser extends XMLParser implements Parser {
 
                 route.setLatLgnBounds(new LatLng(jsonNortheast.getDouble("lat"), jsonNortheast.getDouble("lng")), new LatLng(jsonSouthwest.getDouble("lat"), jsonSouthwest.getDouble("lng")));
 
-                final JSONArray legs = jsonRoute.getJSONArray("legs");
-
-                final int legSize = legs.length();
+                // 경유지 to 경유지
+                final JSONArray legsArray = jsonRoute.getJSONArray("legs");
+                final int legSize = legsArray.length();
+                List<Leg> legs = new ArrayList<>();
 
                 for (int j = 0; j < legSize; j++) {
-                    final JSONObject leg = jsonRoute.getJSONArray("legs").getJSONObject(j);
+                    Leg leg = new Leg();
+                    final JSONObject legObject = jsonRoute.getJSONArray("legs").getJSONObject(j);
 
-                    final JSONArray steps = leg.getJSONArray("steps");
+                    leg.setDurationText(legObject.getJSONObject("duration").getString("text"));
+                    leg.setDurationValue(legObject.getJSONObject("duration").getInt(VALUE));
+                    leg.setDistanceText(legObject.getJSONObject(DISTANCE).getString("text"));
+                    leg.setDistanceValue(legObject.getJSONObject(DISTANCE).getInt(VALUE));
+                    leg.setEndAddressText(legObject.getString("end_address"));
+                    leg.setStartAddressText(legObject.getString("start_address"));
 
-                    final int numSteps = steps.length();
+                    JSONObject startPosition = legObject.getJSONObject("start_location");
+                    leg.setStartPosition(new LatLng(startPosition.getDouble("lat"), startPosition.getDouble("lng")));
 
-                    route.setName(leg.getString("start_address") + " to " + leg.getString("end_address"));
+                    JSONObject endPosition = legObject.getJSONObject("end_location");
+                    leg.setEndPosition(new LatLng(endPosition.getDouble("lat"), endPosition.getDouble("lng")));
 
-                    route.setDurationText(leg.getJSONObject("duration").getString("text"));
-                    route.setDurationValue(leg.getJSONObject("duration").getInt(VALUE));
-                    route.setDistanceText(leg.getJSONObject(DISTANCE).getString("text"));
-                    route.setDistanceValue(leg.getJSONObject(DISTANCE).getInt(VALUE));
-                    route.setEndAddressText(leg.getString("end_address"));
-                    route.setLength(leg.getJSONObject(DISTANCE).getInt(VALUE));
+                    // 경유지에서 스탭 (단계)
+                    final JSONArray stepsArray = legObject.getJSONArray("steps");
+                    final int numSteps = stepsArray.length();
+                    List<Step> steps = new ArrayList<>();
 
                     for (int y = 0; y < numSteps; y++) {
-                        final JSONObject step = steps.getJSONObject(y);
-                        final JSONObject start = step.getJSONObject("start_location");
-                        final LatLng position = new LatLng(start.getDouble("lat"), start.getDouble("lng"));
-                        segment.setPoint(position);
+                        Step step = new Step();
+                        final JSONObject stepObject = stepsArray.getJSONObject(y);
 
-                        final int length = step.getJSONObject(DISTANCE).getInt(VALUE);
+                        startPosition = stepObject.getJSONObject("start_location");
+                        step.setStartPosition(new LatLng(startPosition.getDouble("lat"), startPosition.getDouble("lng")));
+
+                        endPosition = stepObject.getJSONObject("end_location");
+                        step.setEndPosition(new LatLng(endPosition.getDouble("lat"), endPosition.getDouble("lng")));
+
+                        step.setInstruction(stepObject.getString("html_instructions").replaceAll("<(.*?)*>", ""));
+
+                        if (stepObject.has("maneuver")) {
+                            step.setManeuver(stepObject.getString("maneuver"));
+                        }
+
+                        int length = stepObject.getJSONObject(DISTANCE).getInt(VALUE);
+                        // 총 거리를 구합니다.
                         distance += length;
-                        segment.setLength(length);
-                        segment.setDistance((double) distance / (double) 1000);
+                        step.setDistance((double) length / (double) 1000);
 
-                        segment.setInstruction(step.getString("html_instructions").replaceAll("<(.*?)*>", ""));
+                        if (stepObject.has("travel_mode")) {
+                            step.setTravelMode(stepObject.getString("travel_mode"));
+                        }
 
-                        if (step.has("maneuver"))
-                            segment.setManeuver(step.getString("maneuver"));
+                        List<LatLng> points = new ArrayList<>();
+                        points.addAll(decodePolyLine(stepObject.getJSONObject("polyline").getString("points")));
+                        step.setPoints(points);
 
-                        route.addPoints(decodePolyLine(step.getJSONObject("polyline").getString("points")));
-                        route.addSegment(segment.copy());
+                        steps.add(step);
                     }
+
+                    leg.setSteps(steps);
+                    legs.add(leg);
                 }
 
-
+                route.setLegs(legs);
+                route.setLength(distance);
                 routes.add(route);
             }
 

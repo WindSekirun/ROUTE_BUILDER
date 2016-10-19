@@ -157,17 +157,28 @@ public class MapsActivity extends AppCompatActivity
         StringBuilder stringBuilder = new StringBuilder();
 
         // 미국 등지에서는 피트, 마일 단위, 기본적으로는 미터, 킬로미터를 사용합니다.
-        // TODO: USER CHOICE NEEDED;
         double distanceToKm = MathUtils.getKilo(distance);
         double distanceToMile = MathUtils.getMiles(distance);
         long durationToMin = MathUtils.getMin(duration);
 
         stringBuilder.append(Math.round(distanceToKm))
                 .append("km (")
-                .append(distanceToMile)
-                .append("mi) ")
-                .append(durationToMin)
-                .append("min");
+                .append(Math.round(distanceToMile))
+                .append("mi) ");
+
+        if (durationToMin >= 60) {
+            long durationToHour = durationToMin / 60;
+            durationToMin = durationToMin % 60;
+
+            stringBuilder.append(durationToHour)
+                    .append("hour ")
+                    .append(durationToMin)
+                    .append("min");
+        } else {
+            stringBuilder.append(durationToMin)
+                    .append("min");
+
+        }
 
         timeView.setText(stringBuilder.toString());
     }
@@ -222,6 +233,7 @@ public class MapsActivity extends AppCompatActivity
         }
 
         polylines = new ArrayList<>();
+
         // We only support first Route!
         final Route route = routes.get(0);
         int legSize = route.getLegs().size();

@@ -12,11 +12,28 @@ public class Route {
     private String copyright;
     private String warning;
     private LatLngBounds latLgnBounds;
-    private int length;
     private List<Integer> waypointOrder;
+    private long duration;
+    private long distance;
 
     public Route() {
         legs = new ArrayList<>();
+    }
+
+    public long getDistance() {
+        return distance;
+    }
+
+    public void setDistance(long distance) {
+        this.distance = distance;
+    }
+
+    public long getDuration() {
+        return duration;
+    }
+
+    public void setDuration(long duration) {
+        this.duration = duration;
     }
 
     public List<Integer> getWaypointOrder() {
@@ -57,14 +74,6 @@ public class Route {
 
     public void setWarning(String warning) {
         this.warning = warning;
-    }
-
-    public int getLength() {
-        return length;
-    }
-
-    public void setLength(int length) {
-        this.length = length;
     }
 
     public LatLngBounds getLatLgnBounds() {

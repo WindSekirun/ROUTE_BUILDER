@@ -60,6 +60,7 @@ public class GoogleParser extends XMLParser implements Parser {
             for (int i = 0; i < jsonRoutes.length(); i++) {
                 Route route = new Route();
                 distance = 0;
+                duration = 0;
 
                 // 공통 정보
                 JSONObject jsonRoute = jsonRoutes.getJSONObject(i);
@@ -102,6 +103,9 @@ public class GoogleParser extends XMLParser implements Parser {
                     leg.setEndAddressText(legObject.getString("end_address"));
                     leg.setStartAddressText(legObject.getString("start_address"));
 
+                    distance += legObject.getJSONObject(DISTANCE).getInt(VALUE);
+                    duration += legObject.getJSONObject("duration").getInt(VALUE);
+
                     JSONObject startPosition = legObject.getJSONObject("start_location");
                     leg.setStartPosition(new LatLng(startPosition.getDouble("lat"), startPosition.getDouble("lng")));
 
@@ -131,8 +135,6 @@ public class GoogleParser extends XMLParser implements Parser {
                         }
 
                         int length = stepObject.getJSONObject(DISTANCE).getInt(VALUE);
-                        // 총 거리를 구합니다.
-                        distance += length;
                         step.setDistance((double) length / (double) 1000);
 
                         if (stepObject.has("travel_mode")) {
@@ -153,7 +155,8 @@ public class GoogleParser extends XMLParser implements Parser {
                 }
 
                 route.setLegs(legs);
-                route.setLength(distance);
+                route.setDistance(distance);
+                route.setDuration(duration);
                 routes.add(route);
             }
 

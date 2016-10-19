@@ -6,6 +6,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -67,6 +69,10 @@ public class MapsActivity extends AppCompatActivity
 
     RouteModel routeModel;
     MaterialDialog progressDialog;
+
+    RelativeLayout basicInfoView;
+    TextView routeTitle;
+    TextView timeView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -140,6 +146,28 @@ public class MapsActivity extends AppCompatActivity
         routing.execute();
     }
 
+    @SuppressWarnings("StringBufferReplaceableByString")
+    public void displayBasicInfo(long distance, long duration) {
+        basicInfoView = (RelativeLayout) findViewById(R.id.basicInfoView);
+        routeTitle = (TextView) findViewById(R.id.routeTitle);
+        timeView = (TextView) findViewById(R.id.timeView);
+
+        routeTitle.setText(routeModel.getTitle());
+        StringBuilder stringBuilder = new StringBuilder();
+
+        // 미국 등지에서는 피트, 마일 단위, 기본적으로는 미터, 킬로미터를 사용합니다.
+        // TODO: USER CHOICE NEEDED;
+        double distanceToKm = distance * 0.001;
+        long durationToMin = duration / 60;
+
+        stringBuilder.append(Math.round(distanceToKm))
+                .append("km ")
+                .append(durationToMin)
+                .append("min");
+
+        timeView.setText(stringBuilder.toString());
+    }
+
     @Override
     public void onConnected(@Nullable Bundle bundle) {
 
@@ -172,8 +200,8 @@ public class MapsActivity extends AppCompatActivity
     }
 
     // TODO: TPS 자체 시스템을 생각해보면, 목적은 경유지 최적화로 인한 경로 안내다.
-    // TODO: 그러면 A to B 라는 방식을 지원해야 되는가?
-    // TODO: 그렇지 않다면, 루트로 나눠서 처리하는 것 보다는 '''Segment 자체를 분할시키는 것이 좋을 것''' 같다.
+    // TODO: 그러면 A to B 라는 방식을 지원해야 되는가? -> 교수님께 여쭤보기
+    // TODO: 그렇지 않다면, 루트로 나눠서 처리하는 것 보다는 루트는 고정, Legs로 구간을 나타내는 데에 집중해야 한다.
     @Override
     public void onRoutingSuccess(List<Route> routes, int shortestRouteIndex) {
         progressDialog.dismiss();
@@ -191,7 +219,7 @@ public class MapsActivity extends AppCompatActivity
 
         polylines = new ArrayList<>();
         // We only support first Route!
-        Route route = routes.get(0);
+        final Route route = routes.get(0);
         int legSize = route.getLegs().size();
 
         for (int i = 0; i < legSize; i++) {
@@ -200,7 +228,7 @@ public class MapsActivity extends AppCompatActivity
 
             PolylineOptions polyOptions = new PolylineOptions();
             polyOptions.color(ContextCompat.getColor(MapsActivity.this, COLORS[colorIndex]));
-            polyOptions.width(10 + i * 3);
+            polyOptions.width(16);
             polyOptions.addAll(leg.getLegPointToDisplay());
             Polyline polyline = map.addPolyline(polyOptions);
             polylines.add(polyline);
@@ -215,6 +243,13 @@ public class MapsActivity extends AppCompatActivity
         options = new MarkerOptions();
         options.position(end);
         map.addMarker(options);
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                displayBasicInfo(route.getDistance(), route.getDuration());
+            }
+        });
     }
 
     @Override

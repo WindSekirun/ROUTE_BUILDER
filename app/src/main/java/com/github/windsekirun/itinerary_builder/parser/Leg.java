@@ -9,8 +9,10 @@ import java.util.List;
  */
 public class Leg {
     private String durationText;
+    // 초 단위
     private int durationValue;
     private String distanceText;
+    // 미터 단위. 미국 등에선 마일이나 피트를 쓰지만, 반드시 미터 단위표시.
     private int distanceValue;
     private String endAddressText;
     private String startAddressText;

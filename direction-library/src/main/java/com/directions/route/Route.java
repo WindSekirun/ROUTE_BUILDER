@@ -1,5 +1,4 @@
 package com.directions.route;
-//by Haseem Saheed
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -11,6 +10,7 @@ import java.util.List;
 public class Route {
     private String name;
     private final List<LatLng> points;
+    private List<Leg> legs;
     private List<Segment> segments;
     private String copyright;
     private String warning;
@@ -24,13 +24,13 @@ public class Route {
     private int distanceValue;
     private String endAddressText;
     private PolylineOptions polyOptions;
-    private int[] waypointOrder;
+    private List<Integer>  waypointOrder;
 
-    public int[] getWaypointOrder() {
+    public List<Integer>  getWaypointOrder() {
         return waypointOrder;
     }
 
-    public void setWaypointOrder(int[] waypointOrder) {
+    public void setWaypointOrder(List<Integer> waypointOrder) {
         this.waypointOrder = waypointOrder;
     }
 
@@ -89,6 +89,15 @@ public class Route {
     public Route() {
         points = new ArrayList<LatLng>();
         segments = new ArrayList<Segment>();
+        legs = new ArrayList<>();
+    }
+
+    public List<Leg> getLegs() {
+        return legs;
+    }
+
+    public void setLegs(List<Leg> legs) {
+        this.legs = legs;
     }
 
     public void addPoint(final LatLng p) {

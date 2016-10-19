@@ -18,19 +18,18 @@ import java.util.List;
 
 /**
  * Parses a url pointing to a Google JSON object to a Route object.
- *
+ * <p/>
  * Some Edit by FIXME @WindSekirun
+ *
  * @return a Route object based on the JSON object by Haseem Saheed
  */
 
 public class GoogleParser extends XMLParser implements Parser {
-
     private static final String VALUE = "value";
     private static final String DISTANCE = "distance";
 
     private int distance;
 
-    /* Status code returned when the request succeeded */
     private static final String OK = "OK";
 
     public GoogleParser(String feedUrl) {
@@ -41,7 +40,6 @@ public class GoogleParser extends XMLParser implements Parser {
     public final List<Route> parse() throws RouteException {
         List<Route> routes = new ArrayList<>();
 
-        // turn the stream into a string
         final String result = convertStreamToString(this.getInputStream());
         Log.e("parse-Result", result + "");
         if (result == null) {
@@ -72,18 +70,16 @@ public class GoogleParser extends XMLParser implements Parser {
                     route.setWarning(jsonRoute.getJSONArray("warnings").getString(0));
                 }
 
-                /*
                 if (!jsonRoute.getJSONArray("waypoint_order").isNull(0)) {
                     JSONArray wayOrderArray = jsonRoute.getJSONArray("waypoint_order");
                     int size = wayOrderArray.length();
-                    int[] wayPointOrder = new int[]{};
+                    List<Integer> wayPointOrder = new ArrayList<>();
                     for (int z = 0; z < size; z++) {
-                        wayPointOrder[z] = wayOrderArray.getInt(z);
+                        wayPointOrder.add(wayOrderArray.getInt(z));
                     }
 
                     route.setWaypointOrder(wayPointOrder);
                 }
-                */
 
                 route.setLatLgnBounds(new LatLng(jsonNortheast.getDouble("lat"), jsonNortheast.getDouble("lng")), new LatLng(jsonSouthwest.getDouble("lat"), jsonSouthwest.getDouble("lng")));
 

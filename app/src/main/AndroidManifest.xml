@@ -37,6 +37,7 @@
             android:screenOrientation="portrait" />
 
         <activity android:name=".activity.MapsActivity"
+            android:theme="@style/AppTheme_NoActionBar"
             android:screenOrientation="portrait"/>
 
         <meta-data

@@ -21,6 +21,7 @@ import com.github.windsekirun.itinerary_builder.Constants;
 import com.github.windsekirun.itinerary_builder.R;
 import com.github.windsekirun.itinerary_builder.model.LocationModel;
 import com.github.windsekirun.itinerary_builder.model.RouteModel;
+import com.github.windsekirun.itinerary_builder.utils.MathUtils;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Places;
@@ -157,11 +158,14 @@ public class MapsActivity extends AppCompatActivity
 
         // 미국 등지에서는 피트, 마일 단위, 기본적으로는 미터, 킬로미터를 사용합니다.
         // TODO: USER CHOICE NEEDED;
-        double distanceToKm = distance * 0.001;
-        long durationToMin = duration / 60;
+        double distanceToKm = MathUtils.getKilo(distance);
+        double distanceToMile = MathUtils.getMiles(distance);
+        long durationToMin = MathUtils.getMin(duration);
 
         stringBuilder.append(Math.round(distanceToKm))
-                .append("km ")
+                .append("km (")
+                .append(distanceToMile)
+                .append("mi) ")
                 .append(durationToMin)
                 .append("min");
 

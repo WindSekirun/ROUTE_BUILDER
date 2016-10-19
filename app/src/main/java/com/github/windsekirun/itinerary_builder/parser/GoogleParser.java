@@ -1,4 +1,4 @@
-package com.directions.route;
+package com.github.windsekirun.itinerary_builder.parser;
 
 import android.util.Log;
 
@@ -112,6 +112,7 @@ public class GoogleParser extends XMLParser implements Parser {
                     final JSONArray stepsArray = legObject.getJSONArray("steps");
                     final int numSteps = stepsArray.length();
                     List<Step> steps = new ArrayList<>();
+                    List<LatLng> legPoints = new ArrayList<>();
 
                     for (int y = 0; y < numSteps; y++) {
                         Step step = new Step();
@@ -141,10 +142,12 @@ public class GoogleParser extends XMLParser implements Parser {
                         List<LatLng> points = new ArrayList<>();
                         points.addAll(decodePolyLine(stepObject.getJSONObject("polyline").getString("points")));
                         step.setPoints(points);
+                        legPoints.addAll(points);
 
                         steps.add(step);
                     }
 
+                    leg.setLegPointToDisplay(legPoints);
                     leg.setSteps(steps);
                     legs.add(leg);
                 }

@@ -3,16 +3,18 @@ package com.github.windsekirun.itinerary_builder.activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.directions.route.AbstractRouting;
-import com.directions.route.Route;
-import com.directions.route.RouteException;
-import com.directions.route.Routing;
-import com.directions.route.RoutingListener;
+import com.github.windsekirun.itinerary_builder.parser.AbstractRouting;
+import com.github.windsekirun.itinerary_builder.parser.Leg;
+import com.github.windsekirun.itinerary_builder.parser.Route;
+import com.github.windsekirun.itinerary_builder.parser.RouteException;
+import com.github.windsekirun.itinerary_builder.parser.Routing;
+import com.github.windsekirun.itinerary_builder.parser.RoutingListener;
 import com.github.windsekirun.itinerary_builder.Constants;
 import com.github.windsekirun.itinerary_builder.R;
 import com.github.windsekirun.itinerary_builder.model.LocationModel;
@@ -52,12 +54,16 @@ public class MapsActivity extends AppCompatActivity
 
     protected GoogleApiClient mGoogleApiClient;
     protected List<Polyline> polylines;
+
     protected static final int[] COLORS = new int[] {
-            R.color.main_route_1,
-            R.color.main_route_2,
-            R.color.main_route_3,
-            R.color.main_route_4,
-            R.color.main_route_5};
+            R.color.md_blue_500, R.color.md_cyan_500, R.color.md_teal_500, R.color.md_green_500,
+            R.color.md_lime_500, R.color.md_brown_500, R.color.md_deep_orange_500, R.color.md_amber_500,
+            R.color.md_grey_500, R.color.md_yellow_500, R.color.md_blue_grey_500, R.color.md_pink_500,
+            R.color.md_deep_purple_600, R.color.md_red_500, R.color.md_indigo_500, R.color.md_light_blue_500,
+            R.color.md_purple_500, R.color.md_light_green_500, R.color.md_orange_500, R.color.md_teal_700,
+            R.color.md_blue_500, R.color.md_green_700, R.color.md_light_blue_700, R.color.md_indigo_700,
+            R.color.md_pink_200,
+    };
 
     RouteModel routeModel;
     MaterialDialog progressDialog;
@@ -169,7 +175,7 @@ public class MapsActivity extends AppCompatActivity
     // TODO: 그러면 A to B 라는 방식을 지원해야 되는가?
     // TODO: 그렇지 않다면, 루트로 나눠서 처리하는 것 보다는 '''Segment 자체를 분할시키는 것이 좋을 것''' 같다.
     @Override
-    public void onRoutingSuccess(List<Route> route, int shortestRouteIndex) {
+    public void onRoutingSuccess(List<Route> routes, int shortestRouteIndex) {
         progressDialog.dismiss();
         CameraUpdate center = CameraUpdateFactory.newLatLng(start);
         CameraUpdate zoom = CameraUpdateFactory.zoomTo(12);
@@ -181,6 +187,23 @@ public class MapsActivity extends AppCompatActivity
             for (Polyline poly : polylines) {
                 poly.remove();
             }
+        }
+
+        polylines = new ArrayList<>();
+        // We only support first Route!
+        Route route = routes.get(0);
+        int legSize = route.getLegs().size();
+
+        for (int i = 0; i < legSize; i++) {
+            int colorIndex = i % COLORS.length;
+            Leg leg = route.getLegs().get(i);
+
+            PolylineOptions polyOptions = new PolylineOptions();
+            polyOptions.color(ContextCompat.getColor(MapsActivity.this, COLORS[colorIndex]));
+            polyOptions.width(10 + i * 3);
+            polyOptions.addAll(leg.getLegPointToDisplay());
+            Polyline polyline = map.addPolyline(polyOptions);
+            polylines.add(polyline);
         }
 
         // Start marker

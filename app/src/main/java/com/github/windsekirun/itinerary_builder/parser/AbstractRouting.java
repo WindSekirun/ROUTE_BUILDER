@@ -1,4 +1,4 @@
-package com.directions.route;
+package com.github.windsekirun.itinerary_builder.parser;
 
 /**
  * Async Task to access the Google Direction API and return the routing data
@@ -10,9 +10,6 @@ package com.directions.route;
  */
 
 import android.os.AsyncTask;
-
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
 import java.util.List;

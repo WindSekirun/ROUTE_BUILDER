@@ -1,4 +1,4 @@
-package com.directions.route;
+package com.github.windsekirun.itinerary_builder.parser;
 
 import com.google.android.gms.maps.model.LatLng;
 

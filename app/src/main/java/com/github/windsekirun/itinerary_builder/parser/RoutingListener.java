@@ -1,4 +1,4 @@
-package com.directions.route;
+package com.github.windsekirun.itinerary_builder.parser;
 
 import java.util.List;
 

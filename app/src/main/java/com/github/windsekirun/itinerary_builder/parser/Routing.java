@@ -13,7 +13,7 @@ import java.util.List;
 public class Routing extends AbstractRouting {
 
     private final TravelMode travelMode;
-    private final boolean  alternativeRoutes;
+    private final boolean alternativeRoutes;
     private final List<LatLng> waypoints;
     private final int avoidKinds;
     private final boolean optimize;
@@ -31,7 +31,7 @@ public class Routing extends AbstractRouting {
         this.key = builder.key;
     }
 
-    protected String constructURL () {
+    protected String constructURL() {
         final StringBuilder stringBuilder = new StringBuilder(DIRECTIONS_API_URL);
 
         // origin
@@ -52,13 +52,13 @@ public class Routing extends AbstractRouting {
         stringBuilder.append("&mode=").append(travelMode.getValue());
 
         // waypoints
-        if (waypoints.size() > 2) {
+        if (waypoints.size() >= 2) {
             stringBuilder.append("&waypoints=");
-            if(optimize)
+            if (optimize)
                 stringBuilder.append("optimize:true|");
             for (int i = 1; i < waypoints.size() - 1; i++) {
                 final LatLng p = waypoints.get(i);
-                stringBuilder.append(""); //  FIXME @WindSekirun exclude via:
+                stringBuilder.append(""); //  FIXME @WindSekirun exclude wayPoints.
                 stringBuilder.append(p.latitude);
                 stringBuilder.append(',');
                 stringBuilder.append(p.longitude);
@@ -85,7 +85,7 @@ public class Routing extends AbstractRouting {
         }
 
         // API key
-        if(key != null) {
+        if (key != null) {
             stringBuilder.append("&key=").append(key);
         }
         return stringBuilder.toString();
@@ -102,7 +102,7 @@ public class Routing extends AbstractRouting {
         private String language;
         private String key;
 
-        public Builder () {
+        public Builder() {
             this.travelMode = TravelMode.DRIVING;
             this.alternativeRoutes = false;
             this.waypoints = new ArrayList<>();
@@ -113,23 +113,23 @@ public class Routing extends AbstractRouting {
             this.key = null;
         }
 
-        public Builder travelMode (TravelMode travelMode) {
+        public Builder travelMode(TravelMode travelMode) {
             this.travelMode = travelMode;
             return this;
         }
 
-        public Builder alternativeRoutes (boolean alternativeRoutes) {
+        public Builder alternativeRoutes(boolean alternativeRoutes) {
             this.alternativeRoutes = alternativeRoutes;
             return this;
         }
 
-        public Builder waypoints (LatLng... points) {
+        public Builder waypoints(LatLng... points) {
             waypoints.clear();
             Collections.addAll(waypoints, points);
             return this;
         }
 
-        public Builder waypoints (List<LatLng> waypoints) {
+        public Builder waypoints(List<LatLng> waypoints) {
             this.waypoints = new ArrayList<>(waypoints);
             return this;
         }
@@ -139,14 +139,14 @@ public class Routing extends AbstractRouting {
             return this;
         }
 
-        public Builder avoid (AvoidKind... avoids) {
+        public Builder avoid(AvoidKind... avoids) {
             for (AvoidKind avoidKind : avoids) {
                 this.avoidKinds |= avoidKind.getBitValue();
             }
             return this;
         }
 
-        public Builder language (String language) {
+        public Builder language(String language) {
             this.language = language;
             return this;
         }
@@ -156,12 +156,12 @@ public class Routing extends AbstractRouting {
             return this;
         }
 
-        public Builder withListener (RoutingListener listener) {
+        public Builder withListener(RoutingListener listener) {
             this.listener = listener;
             return this;
         }
 
-        public Routing build () {
+        public Routing build() {
             if (this.waypoints.size() < 2) {
                 throw new IllegalArgumentException("Must supply at least two waypoints to route between.");
             }

@@ -37,6 +37,7 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -88,13 +89,13 @@ public class MapsActivity extends AppCompatActivity
         start = new LatLng(routeModel.getStartLocation().getLatitude(), routeModel.getStartLocation().getLongitude());
         end = new LatLng(routeModel.getEndLocation().getLatitude(), routeModel.getEndLocation().getLongitude());
 
-
         for (LocationModel points : routeModel.getLocationRoutes()) {
             wayPoints.add(new LatLng(points.getLatitude(), points.getLongitude()));
         }
 
-        wayPoints.add(0, start);
         wayPoints.add(wayPoints.size() - 1, end);
+        Collections.reverse(wayPoints);
+        wayPoints.add(0, start);
 
         polylines = new ArrayList<>();
 
@@ -133,7 +134,7 @@ public class MapsActivity extends AppCompatActivity
         map.moveCamera(center);
         map.animateCamera(zoom);
 
-        boolean optimize = wayPoints.size() > 2;
+        boolean optimize = wayPoints.size() >= 2;
 
         Routing routing = new Routing.Builder()
                 .travelMode(AbstractRouting.TravelMode.DRIVING)

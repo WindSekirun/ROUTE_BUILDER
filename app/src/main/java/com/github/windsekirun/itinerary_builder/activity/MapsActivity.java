@@ -93,8 +93,7 @@ public class MapsActivity extends AppCompatActivity
             wayPoints.add(new LatLng(points.getLatitude(), points.getLongitude()));
         }
 
-        wayPoints.add(wayPoints.size() - 1, end);
-        Collections.reverse(wayPoints);
+        wayPoints.add(wayPoints.size(), end);
         wayPoints.add(0, start);
 
         polylines = new ArrayList<>();
@@ -134,7 +133,7 @@ public class MapsActivity extends AppCompatActivity
         map.moveCamera(center);
         map.animateCamera(zoom);
 
-        boolean optimize = wayPoints.size() >= 2;
+        boolean optimize = wayPoints.size() > 2;
 
         Routing routing = new Routing.Builder()
                 .travelMode(AbstractRouting.TravelMode.DRIVING)

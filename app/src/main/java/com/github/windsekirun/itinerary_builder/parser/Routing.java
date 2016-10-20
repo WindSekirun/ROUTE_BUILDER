@@ -41,6 +41,8 @@ public class Routing extends AbstractRouting {
                 .append(',')
                 .append(origin.longitude);
 
+        waypoints.remove(origin);
+
         // destination
         final LatLng destination = waypoints.get(waypoints.size() - 1);
         stringBuilder.append("&destination=")
@@ -48,15 +50,17 @@ public class Routing extends AbstractRouting {
                 .append(',')
                 .append(destination.longitude);
 
+        waypoints.remove(destination);
+
         // travel
         stringBuilder.append("&mode=").append(travelMode.getValue());
 
         // waypoints
-        if (waypoints.size() >= 2) {
+        if (waypoints.size() > 0) {
             stringBuilder.append("&waypoints=");
             if (optimize)
                 stringBuilder.append("optimize:true|");
-            for (int i = 1; i < waypoints.size() - 1; i++) {
+            for (int i = 0; i < waypoints.size(); i++) {
                 final LatLng p = waypoints.get(i);
                 stringBuilder.append(""); //  FIXME @WindSekirun exclude wayPoints.
                 stringBuilder.append(p.latitude);

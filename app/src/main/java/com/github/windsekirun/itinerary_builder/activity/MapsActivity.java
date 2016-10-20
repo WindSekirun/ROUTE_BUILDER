@@ -264,10 +264,12 @@ public class MapsActivity extends AppCompatActivity
             Polyline polyline = map.addPolyline(polyOptions);
             polylines.add(polyline);
 
-            options = new MarkerOptions();
-            options.position(leg.getEndPosition());
-            options.icon(getMarkerIcon(ContextCompat.getColor(MapsActivity.this, COLORS[colorIndex])));
-            map.addMarker(options);
+            if (i != legSize - 1) {
+                options = new MarkerOptions();
+                options.position(leg.getEndPosition());
+                options.icon(getMarkerIcon(ContextCompat.getColor(MapsActivity.this, COLORS[colorIndex])));
+                map.addMarker(options);
+            }
         }
 
         runOnUiThread(new Runnable() {

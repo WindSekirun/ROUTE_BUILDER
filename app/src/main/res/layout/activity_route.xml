@@ -24,37 +24,6 @@
         android:layout_alignParentEnd="true"
         android:hint="설명" />
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/description"
-        android:layout_alignStart="@+id/title"
-        android:layout_alignEnd="@+id/title"
-        android:id="@+id/linearLayout">
-
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="자가용"
-            android:id="@+id/carButton"
-            android:layout_weight="1" />
-
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="대중교통"
-            android:id="@+id/publicButton"
-            android:layout_weight="1" />
-
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="도보"
-            android:id="@+id/walkButton"
-            android:layout_weight="1" />
-    </LinearLayout>
-
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

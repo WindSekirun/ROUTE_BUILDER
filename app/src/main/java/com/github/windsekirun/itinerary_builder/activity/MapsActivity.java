@@ -138,7 +138,7 @@ public class MapsActivity extends AppCompatActivity
         Routing routing = new Routing.Builder()
                 .travelMode(AbstractRouting.TravelMode.DRIVING)
                 .withListener(this)
-                .alternativeRoutes(true)
+                .alternativeRoutes(false)
                 .optimize(optimize)
                 .waypoints(wayPoints)
                 .key(API_KEY)

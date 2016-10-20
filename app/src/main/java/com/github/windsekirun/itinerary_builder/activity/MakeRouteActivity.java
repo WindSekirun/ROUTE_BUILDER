@@ -52,12 +52,6 @@ public class MakeRouteActivity extends AppCompatActivity implements Constants {
     EditText start;
     @Bind(R.id.end)
     EditText end;
-    @Bind(R.id.carButton)
-    RadioButton carButton;
-    @Bind(R.id.publicButton)
-    RadioButton busButton;
-    @Bind(R.id.walkButton)
-    RadioButton walkButton;
 
     public final int START_PICK_CODE = 4;
     public final int END_PICK_CODE = 5;
@@ -77,24 +71,6 @@ public class MakeRouteActivity extends AppCompatActivity implements Constants {
         ButterKnife.bind(this);
         inflateToolbar();
 
-        carButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switchRadio(MoveMethod.CAR);
-            }
-        });
-        busButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switchRadio(MoveMethod.BUS);
-            }
-        });
-        walkButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switchRadio(MoveMethod.WALK);
-            }
-        });
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -118,8 +94,6 @@ public class MakeRouteActivity extends AppCompatActivity implements Constants {
             }
         });
 
-        carButton.setChecked(true);
-
         routeModel = (RouteModel) getIntent().getSerializableExtra(ROUTE_MODEL);
 
         if (routeModel != null) {
@@ -132,19 +106,6 @@ public class MakeRouteActivity extends AppCompatActivity implements Constants {
 
             description.setText(routeModel.getDescription());
             description.setSelection(description.length());
-
-            switch (routeModel.getMoveMethod()) {
-                case CAR:
-                default:
-                    carButton.setChecked(true);
-                    break;
-                case WALK:
-                    walkButton.setChecked(true);
-                    break;
-                case BUS:
-                    busButton.setChecked(true);
-                    break;
-            }
 
             cursor = getIntent().getIntExtra(CURSOR, 0);
         }
@@ -187,23 +148,12 @@ public class MakeRouteActivity extends AppCompatActivity implements Constants {
         if (this.routeModel != null)
             routeModel = this.routeModel;
 
-        MoveMethod moveMethod;
         routeModel.setTitle(title.getText().toString());
         routeModel.setCreatedAt(Calendar.getInstance().getTime());
         routeModel.setDescription(description.getText().toString());
         routeModel.setEndLocation(endLocation);
         routeModel.setStartLocation(startLocation);
         routeModel.setLocationRoutes(viaLocationList);
-
-        if (walkButton.isChecked()) {
-            moveMethod = MoveMethod.WALK;
-        } else if (busButton.isChecked()) {
-            moveMethod = MoveMethod.BUS;
-        } else {
-            moveMethod = MoveMethod.CAR;
-        }
-
-        routeModel.setMoveMethod(moveMethod);
 
         Intent intent = new Intent();
         intent.putExtra(ROUTE_MODEL, routeModel);
@@ -269,20 +219,6 @@ public class MakeRouteActivity extends AppCompatActivity implements Constants {
             GooglePlayServicesUtil.getErrorDialog(e.getConnectionStatusCode(), MakeRouteActivity.this, 0);
         } catch (GooglePlayServicesNotAvailableException e) {
             Toast.makeText(MakeRouteActivity.this, R.string.gps_not_available, Toast.LENGTH_LONG).show();
-        }
-    }
-
-    public void switchRadio(MoveMethod method) {
-        carButton.setChecked(false);
-        busButton.setChecked(false);
-        walkButton.setChecked(false);
-
-        if (method == MoveMethod.WALK) {
-            walkButton.setChecked(true);
-        } else if (method == MoveMethod.BUS) {
-            busButton.setChecked(true);
-        } else {
-            carButton.setChecked(true);
         }
     }
 

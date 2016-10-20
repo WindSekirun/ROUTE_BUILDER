@@ -11,7 +11,7 @@
         android:layout_marginRight="16dip"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="10dip"
-        android:hint="제목" />
+        android:hint="@string/title" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -22,7 +22,7 @@
         android:layout_below="@+id/title"
         android:layout_marginRight="16dip"
         android:layout_alignParentEnd="true"
-        android:hint="설명" />
+        android:hint="@string/description" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -31,7 +31,7 @@
         android:layout_below="@+id/description"
         android:layout_alignStart="@+id/description"
         android:layout_alignEnd="@+id/description"
-        android:hint="출발지" />
+        android:hint="@string/origin" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -40,7 +40,7 @@
         android:layout_below="@+id/start"
         android:layout_alignStart="@+id/start"
         android:layout_alignEnd="@+id/start"
-        android:hint="도착지" />
+        android:hint="@string/destination" />
 
     <ListView
         android:layout_width="wrap_content"

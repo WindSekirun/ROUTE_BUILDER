@@ -1,9 +1,13 @@
 <resources>
-    <string name="app_name">ITINERARY_BUILDER</string>
-    <string name="activity_main_placeholder">추가한 경로가 없습니다.\n아래 + 버튼을 눌러\n경로를 추가하세요</string>
-    <string name="app_name_readable">경로 빌더</string>
+    <string name="app_name">Route Builder</string>
+    <string name="activity_main_placeholder">Nothing in here!\nPress + button\nto add Route</string>
+    <string name="app_name_readable">Route Builder</string>
     <string name="gps_not_available">Google Play Services is not available.</string>
-    <string name="saving_route">경로를 저장중입니다.</string>
-    <string name="enter_the_title">제목을 입력해주세요.</string>
-    <string name="fetching_from_data">Fetching from Data...</string>
+    <string name="saving_route">Saved Route.</string>
+    <string name="enter_the_title">Enter title.</string>
+    <string name="fetching_from_data">Fetching from Data…</string>
+    <string name="destination">Destination</string>
+    <string name="origin">Origin</string>
+    <string name="description">Description</string>
+    <string name="title">Title</string>
 </resources>

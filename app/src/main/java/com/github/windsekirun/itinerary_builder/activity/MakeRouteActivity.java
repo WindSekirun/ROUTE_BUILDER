@@ -16,14 +16,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.windsekirun.itinerary_builder.Constants;
 import com.github.windsekirun.itinerary_builder.R;
 import com.github.windsekirun.itinerary_builder.model.LocationModel;
-import com.github.windsekirun.itinerary_builder.model.MoveMethod;
 import com.github.windsekirun.itinerary_builder.model.RouteModel;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -42,6 +40,10 @@ import butterknife.ButterKnife;
  * Created by Pyxis on 2016. 10. 6..
  */
 public class MakeRouteActivity extends AppCompatActivity implements Constants {
+    public final int START_PICK_CODE = 4;
+    public final int END_PICK_CODE = 5;
+    public final int VIA_PICK_CODE = 6;
+    public int cursor = 0;
     @Bind(R.id.viaList)
     ListView viaList;
     @Bind(R.id.title)
@@ -52,12 +54,6 @@ public class MakeRouteActivity extends AppCompatActivity implements Constants {
     EditText start;
     @Bind(R.id.end)
     EditText end;
-
-    public final int START_PICK_CODE = 4;
-    public final int END_PICK_CODE = 5;
-    public final int VIA_PICK_CODE = 6;
-    public int cursor = 0;
-
     ViaListAdapter adapter;
     LocationModel startLocation;
     LocationModel endLocation;
@@ -128,8 +124,8 @@ public class MakeRouteActivity extends AppCompatActivity implements Constants {
                     viaLocationList.add(PlacetoLocationModel(place));
                 }
 
-                updateLocation();
             }
+            updateLocation();
 
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -234,6 +230,26 @@ public class MakeRouteActivity extends AppCompatActivity implements Constants {
         return true;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+            case R.id.menu_add_via:
+                startPicker(VIA_PICK_CODE);
+                break;
+            case R.id.menu_added:
+                if (!title.getText().toString().isEmpty()) {
+                    finishWork();
+                } else {
+                    Toast.makeText(MakeRouteActivity.this, R.string.enter_the_title, Toast.LENGTH_SHORT).show();
+                }
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     public class ViaListAdapter extends ArrayAdapter<LocationModel> {
         Context context;
         ArrayList<LocationModel> itemSet;
@@ -278,25 +294,5 @@ public class MakeRouteActivity extends AppCompatActivity implements Constants {
                 address = (TextView) itemView.findViewById(R.id.textView2);
             }
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                break;
-            case R.id.menu_add_via:
-                startPicker(VIA_PICK_CODE);
-                break;
-            case R.id.menu_added:
-                if (!title.getText().toString().isEmpty()) {
-                    finishWork();
-                } else {
-                    Toast.makeText(MakeRouteActivity.this, R.string.enter_the_title, Toast.LENGTH_SHORT).show();
-                }
-                break;
-        }
-        return super.onOptionsItemSelected(item);
     }
 }

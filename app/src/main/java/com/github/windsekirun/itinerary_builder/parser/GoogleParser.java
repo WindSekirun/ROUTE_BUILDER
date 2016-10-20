@@ -20,23 +20,44 @@ import java.util.List;
  * Parses a url pointing to a Google JSON object to a Route object.
  * <p/>
  * Some Edit by FIXME @WindSekirun
- *
- * @return a Route object based on the JSON object by Haseem Saheed
+ * <p/>
+ * return: a Route object based on the JSON object by Haseem Saheed
  */
 
 public class GoogleParser extends XMLParser implements Parser {
     private static final String VALUE = "value";
     private static final String DISTANCE = "distance";
-
-    private int distance;
-    private int duration;
-
     private static final String OK = "OK";
+    public int distance;
+    public int duration;
 
     public GoogleParser(String feedUrl) {
         super(feedUrl);
     }
 
+    private static String convertStreamToString(final InputStream input) {
+        if (input == null) return null;
+
+        final BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+        final StringBuilder sBuf = new StringBuilder();
+
+        String line;
+        try {
+            while ((line = reader.readLine()) != null) {
+                sBuf.append(line);
+            }
+        } catch (IOException e) {
+            Log.e("Routing Error", e.getMessage());
+        } finally {
+            try {
+                input.close();
+                reader.close();
+            } catch (IOException e) {
+                Log.e("Routing Error", e.getMessage());
+            }
+        }
+        return sBuf.toString();
+    }
 
     public final List<Route> parse() throws RouteException {
         List<Route> routes = new ArrayList<>();
@@ -85,7 +106,8 @@ public class GoogleParser extends XMLParser implements Parser {
                     route.setWaypointOrder(wayPointOrder);
                 }
 
-                route.setLatLgnBounds(new LatLng(jsonNortheast.getDouble("lat"), jsonNortheast.getDouble("lng")), new LatLng(jsonSouthwest.getDouble("lat"), jsonSouthwest.getDouble("lng")));
+                route.setLatLgnBounds(new LatLng(jsonNortheast.getDouble("lat"), jsonNortheast.getDouble("lng")),
+                        new LatLng(jsonSouthwest.getDouble("lat"), jsonSouthwest.getDouble("lng")));
 
                 // 경유지 to 경유지
                 final JSONArray legsArray = jsonRoute.getJSONArray("legs");
@@ -166,34 +188,10 @@ public class GoogleParser extends XMLParser implements Parser {
         return routes;
     }
 
-    private static String convertStreamToString(final InputStream input) {
-        if (input == null) return null;
-
-        final BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-        final StringBuilder sBuf = new StringBuilder();
-
-        String line;
-        try {
-            while ((line = reader.readLine()) != null) {
-                sBuf.append(line);
-            }
-        } catch (IOException e) {
-            Log.e("Routing Error", e.getMessage());
-        } finally {
-            try {
-                input.close();
-                reader.close();
-            } catch (IOException e) {
-                Log.e("Routing Error", e.getMessage());
-            }
-        }
-        return sBuf.toString();
-    }
-
     private List<LatLng> decodePolyLine(final String poly) {
         int len = poly.length();
         int index = 0;
-        List<LatLng> decoded = new ArrayList<LatLng>();
+        List<LatLng> decoded = new ArrayList<>();
         int lat = 0;
         int lng = 0;
 

@@ -1,5 +1,6 @@
 package com.github.windsekirun.itinerary_builder.activity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,16 +12,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.github.windsekirun.itinerary_builder.Constants;
+import com.github.windsekirun.itinerary_builder.R;
+import com.github.windsekirun.itinerary_builder.model.LocationModel;
+import com.github.windsekirun.itinerary_builder.model.RouteModel;
 import com.github.windsekirun.itinerary_builder.parser.AbstractRouting;
 import com.github.windsekirun.itinerary_builder.parser.Leg;
 import com.github.windsekirun.itinerary_builder.parser.Route;
 import com.github.windsekirun.itinerary_builder.parser.RouteException;
 import com.github.windsekirun.itinerary_builder.parser.Routing;
 import com.github.windsekirun.itinerary_builder.parser.RoutingListener;
-import com.github.windsekirun.itinerary_builder.Constants;
-import com.github.windsekirun.itinerary_builder.R;
-import com.github.windsekirun.itinerary_builder.model.LocationModel;
-import com.github.windsekirun.itinerary_builder.model.RouteModel;
 import com.github.windsekirun.itinerary_builder.utils.MathUtils;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -31,13 +32,14 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -51,15 +53,7 @@ public class MapsActivity extends AppCompatActivity
         implements Constants, RoutingListener, OnMapReadyCallback,
         GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
 
-    protected GoogleMap map;
-    protected LatLng start;
-    protected LatLng end;
-    protected List<LatLng> wayPoints;
-
-    protected GoogleApiClient mGoogleApiClient;
-    protected List<Polyline> polylines;
-
-    protected static final int[] COLORS = new int[] {
+    protected static final int[] COLORS = new int[]{
             R.color.md_blue_500, R.color.md_cyan_500, R.color.md_teal_500, R.color.md_green_500,
             R.color.md_lime_500, R.color.md_brown_500, R.color.md_deep_orange_500, R.color.md_amber_500,
             R.color.md_grey_500, R.color.md_yellow_500, R.color.md_blue_grey_500, R.color.md_pink_500,
@@ -68,7 +62,12 @@ public class MapsActivity extends AppCompatActivity
             R.color.md_blue_500, R.color.md_green_700, R.color.md_light_blue_700, R.color.md_indigo_700,
             R.color.md_pink_200,
     };
-
+    protected GoogleMap map;
+    protected LatLng start;
+    protected LatLng end;
+    protected List<LatLng> wayPoints;
+    protected GoogleApiClient mGoogleApiClient;
+    protected List<Polyline> polylines;
     RouteModel routeModel;
     MaterialDialog progressDialog;
 
@@ -124,6 +123,12 @@ public class MapsActivity extends AppCompatActivity
                 .build();
 
         progressDialog.show();
+    }
+
+    public BitmapDescriptor getMarkerIcon(int color) {
+        float[] hsv = new float[3];
+        Color.colorToHSV(color, hsv);
+        return BitmapDescriptorFactory.defaultMarker(hsv[0]);
     }
 
     public void routingProcess() {
@@ -234,6 +239,16 @@ public class MapsActivity extends AppCompatActivity
 
         polylines = new ArrayList<>();
 
+        // Start marker
+        MarkerOptions options = new MarkerOptions();
+        options.position(start);
+        map.addMarker(options);
+
+        // End marker
+        options = new MarkerOptions();
+        options.position(end);
+        map.addMarker(options);
+
         // We only support first Route!
         final Route route = routes.get(0);
         int legSize = route.getLegs().size();
@@ -248,17 +263,12 @@ public class MapsActivity extends AppCompatActivity
             polyOptions.addAll(leg.getLegPointToDisplay());
             Polyline polyline = map.addPolyline(polyOptions);
             polylines.add(polyline);
+
+            options = new MarkerOptions();
+            options.position(leg.getEndPosition());
+            options.icon(getMarkerIcon(ContextCompat.getColor(MapsActivity.this, COLORS[colorIndex])));
+            map.addMarker(options);
         }
-
-        // Start marker
-        MarkerOptions options = new MarkerOptions();
-        options.position(start);
-        map.addMarker(options);
-
-        // End marker
-        options = new MarkerOptions();
-        options.position(end);
-        map.addMarker(options);
 
         runOnUiThread(new Runnable() {
             @Override

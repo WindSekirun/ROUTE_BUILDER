@@ -342,7 +342,6 @@ public class MapsActivity extends AppCompatActivity
         map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                Toast.makeText(MapsActivity.this, "lati:" + marker.getPosition().latitude + "long: " + marker.getPosition().longitude, Toast.LENGTH_SHORT).show();
                 mBottomSheetDialog.show();
                 return false;
             }

@@ -1,12 +1,21 @@
 package com.github.windsekirun.itinerary_builder.activity;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,14 +44,13 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import butterknife.ButterKnife;
 
 /**
  * MapsActivity
@@ -75,13 +83,24 @@ public class MapsActivity extends AppCompatActivity
     TextView routeTitle;
     TextView timeView;
 
+    CoordinatorLayout coordinatorLayout;
+    View bottomSheet;
+    BottomSheetBehavior behavior;
+    LegsModalListAdapter legsModalListAdapter;
+    ArrayList<Pair<String, Leg>> itemSet;
+    RecyclerView legsList;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-        ButterKnife.bind(this);
 
         wayPoints = new ArrayList<>();
+
+        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.cl);
+        bottomSheet = coordinatorLayout.findViewById(R.id.bottom_sheet);
+        behavior = BottomSheetBehavior.from(bottomSheet);
+        legsList = (RecyclerView) findViewById(R.id.list);
 
         // Getting saved data from RouteModel
         routeModel = (RouteModel) getIntent().getSerializableExtra(ROUTE_MODEL);
@@ -123,6 +142,18 @@ public class MapsActivity extends AppCompatActivity
                 .build();
 
         progressDialog.show();
+
+        behavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+
+            }
+        });
     }
 
     public BitmapDescriptor getMarkerIcon(int color) {
@@ -150,6 +181,23 @@ public class MapsActivity extends AppCompatActivity
                 .build();
 
         routing.execute();
+    }
+
+    public void analyzeRouteToList(Route route) {
+        itemSet = new ArrayList<>();
+
+        int legSize = route.getLegs().size();
+        for (int i = 0 ; i < legSize; i++) {
+            Leg leg = route.getLegs().get(i);
+            String title = routeModel.getLocationRoutes().get(i).getName();
+            itemSet.add(new Pair<>(title, leg));
+        }
+
+        legsModalListAdapter = new LegsModalListAdapter(MapsActivity.this, itemSet);
+        legsList.setLayoutManager(new LinearLayoutManager(MapsActivity.this));
+        legsList.setAdapter(legsModalListAdapter);
+
+        legsModalListAdapter.notifyDataSetChanged();
     }
 
     @SuppressWarnings("StringBufferReplaceableByString")
@@ -219,9 +267,6 @@ public class MapsActivity extends AppCompatActivity
 
     }
 
-    // TODO: TPS 자체 시스템을 생각해보면, 목적은 경유지 최적화로 인한 경로 안내다.
-    // TODO: 그러면 A to B 라는 방식을 지원해야 되는가? -> 교수님께 여쭤보기
-    // TODO: 그렇지 않다면, 루트로 나눠서 처리하는 것 보다는 루트는 고정, Legs로 구간을 나타내는 데에 집중해야 한다.
     @Override
     public void onRoutingSuccess(List<Route> routes, int shortestRouteIndex) {
         progressDialog.dismiss();
@@ -255,7 +300,7 @@ public class MapsActivity extends AppCompatActivity
 
         for (int i = 0; i < legSize; i++) {
             int colorIndex = i % COLORS.length;
-            Leg leg = route.getLegs().get(i);
+            final Leg leg = route.getLegs().get(i);
 
             PolylineOptions polyOptions = new PolylineOptions();
             polyOptions.color(ContextCompat.getColor(MapsActivity.this, COLORS[colorIndex]));
@@ -271,6 +316,18 @@ public class MapsActivity extends AppCompatActivity
                 map.addMarker(options);
             }
         }
+
+        analyzeRouteToList(route);
+
+        map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                Toast.makeText(MapsActivity.this, "lati:" + marker.getPosition().latitude + "long: " + marker.getPosition().longitude, Toast.LENGTH_SHORT).show();
+                // TODO: Show Bottom sheet
+                bottomSheet.showContextMenu();
+                return false;
+            }
+        });
 
         runOnUiThread(new Runnable() {
             @Override
@@ -290,5 +347,79 @@ public class MapsActivity extends AppCompatActivity
         this.map = googleMap;
 
         routingProcess();
+    }
+
+    public class LegsModalListAdapter extends RecyclerView.Adapter<LegsModalViewHolder> {
+        Context c;
+        ArrayList<Pair<String, Leg>> itemSet;
+
+        public LegsModalListAdapter(Context c, ArrayList<Pair<String, Leg>> legs) {
+            this.c = c;
+            this.itemSet = legs;
+        }
+
+        @Override
+        public LegsModalViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            return new LegsModalViewHolder(View.inflate(c, R.layout.row_maps_leg_item, null));
+        }
+
+        @Override
+        public void onBindViewHolder(LegsModalViewHolder holder, int position) {
+            Pair<String, Leg> leg = itemSet.get(position);
+            holder.title.setText(leg.first);
+
+            int colorIndex = position % COLORS.length;
+            holder.legColorRoute.setBackgroundColor(ContextCompat.getColor(c, COLORS[colorIndex]));
+
+            StringBuilder stringBuilder = new StringBuilder();
+            int distance = leg.second.getDistanceValue();
+            int duration = leg.second.getDurationValue();
+
+            double distanceToKm = MathUtils.getKilo(distance);
+            double distanceToMile = MathUtils.getMiles(distance);
+            long durationToMin = MathUtils.getMin(duration);
+
+            stringBuilder.append(Math.round(distanceToKm))
+                    .append("km (")
+                    .append(Math.round(distanceToMile))
+                    .append("mi) ");
+
+            if (durationToMin >= 60) {
+                long durationToHour = durationToMin / 60;
+                durationToMin = durationToMin % 60;
+
+                stringBuilder.append(durationToHour)
+                        .append("hour ")
+                        .append(durationToMin)
+                        .append("min");
+            } else {
+                stringBuilder.append(durationToMin)
+                        .append("min");
+            }
+
+            holder.duration.setText(stringBuilder.toString());
+        }
+
+        @Override
+        public int getItemCount() {
+            if (itemSet != null && !itemSet.isEmpty()) {
+                return itemSet.size();
+            } else {
+                return 0;
+            }
+        }
+    }
+
+    public class LegsModalViewHolder extends RecyclerView.ViewHolder {
+        TextView title;
+        FrameLayout legColorRoute;
+        TextView duration;
+
+        public LegsModalViewHolder(View itemView) {
+            super(itemView);
+            title = (TextView) itemView.findViewById(R.id.title);
+            legColorRoute = (FrameLayout) itemView.findViewById(R.id.frameLayout);
+            duration = (TextView) itemView.findViewById(R.id.textView3);
+        }
     }
 }

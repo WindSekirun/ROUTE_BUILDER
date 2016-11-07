@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/title"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="16dip"
+        android:layout_marginTop="10dip"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="16dip"
+        android:singleLine="true"
+        android:text="Waypoint 1"
+        android:textColor="#202020"
+        android:ellipsize="end" />
+
+    <FrameLayout
+        android:layout_width="24dip"
+        android:layout_height="16dip"
+        android:layout_below="@+id/title"
+        android:layout_alignStart="@+id/title"
+        android:layout_marginTop="3dip"
+        android:background="@color/colorPrimary"
+        android:id="@+id/frameLayout"></FrameLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Small Text"
+        android:id="@+id/textView3"
+        android:layout_alignTop="@+id/frameLayout"
+        android:layout_marginLeft="5dip"
+        android:layout_alignBottom="@+id/frameLayout"
+        android:layout_alignEnd="@+id/title"
+        android:layout_toEndOf="@+id/frameLayout"
+        android:ellipsize="end"
+        android:singleLine="true" />
+</RelativeLayout>

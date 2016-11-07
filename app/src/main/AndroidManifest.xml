@@ -33,12 +33,17 @@
         </activity>
 
         <activity
+            android:name=".activity.RouteModalActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".activity.MakeRouteActivity"
             android:screenOrientation="portrait" />
 
-        <activity android:name=".activity.MapsActivity"
-            android:theme="@style/AppTheme_NoActionBar"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.MapsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme_NoActionBar" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

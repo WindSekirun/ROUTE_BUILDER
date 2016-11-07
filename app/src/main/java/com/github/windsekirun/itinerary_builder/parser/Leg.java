@@ -2,12 +2,13 @@ package com.github.windsekirun.itinerary_builder.parser;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by Pyxis on 2016. 10. 20..
  */
-public class Leg {
+public class Leg implements Serializable {
     private String durationText;
     // 초 단위
     private int durationValue;

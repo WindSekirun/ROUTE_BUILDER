@@ -3,6 +3,7 @@ package com.github.windsekirun.itinerary_builder.activity;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -383,7 +384,7 @@ public class MapsActivity extends AppCompatActivity
 
         @Override
         public void onBindViewHolder(LegsModalViewHolder holder, int position) {
-            Pair<String, Leg> leg = itemSet.get(position);
+            final Pair<String, Leg> leg = itemSet.get(position);
             holder.title.setText(leg.first);
 
             int colorIndex = position % COLORS.length;
@@ -416,6 +417,15 @@ public class MapsActivity extends AppCompatActivity
             }
 
             holder.duration.setText(stringBuilder.toString());
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MapsActivity.this, RouteModalActivity.class);
+                    intent.putExtra(LEG_OBJECT, leg.second);
+                    startActivity(intent);
+                }
+            });
         }
 
         @Override

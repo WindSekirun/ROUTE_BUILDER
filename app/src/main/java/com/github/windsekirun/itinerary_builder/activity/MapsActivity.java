@@ -1,11 +1,14 @@
 package com.github.windsekirun.itinerary_builder.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
@@ -89,6 +92,7 @@ public class MapsActivity extends AppCompatActivity
     LegsModalListAdapter legsModalListAdapter;
     ArrayList<Pair<String, Leg>> itemSet;
     RecyclerView legsList;
+    private BottomSheetDialog mBottomSheetDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -100,7 +104,6 @@ public class MapsActivity extends AppCompatActivity
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.cl);
         bottomSheet = coordinatorLayout.findViewById(R.id.bottom_sheet);
         behavior = BottomSheetBehavior.from(bottomSheet);
-        legsList = (RecyclerView) findViewById(R.id.list);
 
         // Getting saved data from RouteModel
         routeModel = (RouteModel) getIntent().getSerializableExtra(ROUTE_MODEL);
@@ -143,15 +146,16 @@ public class MapsActivity extends AppCompatActivity
 
         progressDialog.show();
 
+        behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         behavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
-
+                // unused methods
             }
 
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-
+                // unused methods
             }
         });
     }
@@ -187,17 +191,32 @@ public class MapsActivity extends AppCompatActivity
         itemSet = new ArrayList<>();
 
         int legSize = route.getLegs().size();
-        for (int i = 0 ; i < legSize; i++) {
+        for (int i = 0; i < legSize; i++) {
             Leg leg = route.getLegs().get(i);
-            String title = routeModel.getLocationRoutes().get(i).getName();
+            String title;
+            if (i == 0) {
+                title = routeModel.getStartLocation().getName();
+            } else if (i == legSize - 1) {
+                title = routeModel.getEndLocation().getName();
+            } else {
+                title = routeModel.getLocationRoutes().get(i - 1).getName();
+            }
             itemSet.add(new Pair<>(title, leg));
         }
 
+        @SuppressLint("InflateParams") View view = getLayoutInflater().inflate(R.layout.sheet, null);
+
+        legsList = (RecyclerView) view.findViewById(R.id.recyclerView);
+
         legsModalListAdapter = new LegsModalListAdapter(MapsActivity.this, itemSet);
         legsList.setLayoutManager(new LinearLayoutManager(MapsActivity.this));
+        legsList.setHasFixedSize(true);
         legsList.setAdapter(legsModalListAdapter);
 
         legsModalListAdapter.notifyDataSetChanged();
+
+        mBottomSheetDialog = new BottomSheetDialog(this);
+        mBottomSheetDialog.setContentView(view);
     }
 
     @SuppressWarnings("StringBufferReplaceableByString")
@@ -238,17 +257,17 @@ public class MapsActivity extends AppCompatActivity
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-
+        // unused methods
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-
+        // unused methods - notification needed!
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
+        // unused methods - notification needed!
     }
 
     @Override
@@ -264,7 +283,7 @@ public class MapsActivity extends AppCompatActivity
 
     @Override
     public void onRoutingStart() {
-
+        // unused methods - notification needed!
     }
 
     @Override
@@ -323,8 +342,7 @@ public class MapsActivity extends AppCompatActivity
             @Override
             public boolean onMarkerClick(Marker marker) {
                 Toast.makeText(MapsActivity.this, "lati:" + marker.getPosition().latitude + "long: " + marker.getPosition().longitude, Toast.LENGTH_SHORT).show();
-                // TODO: Show Bottom sheet
-                bottomSheet.showContextMenu();
+                mBottomSheetDialog.show();
                 return false;
             }
         });
@@ -339,7 +357,7 @@ public class MapsActivity extends AppCompatActivity
 
     @Override
     public void onRoutingCancelled() {
-
+        // unused methods - notification needed!
     }
 
     @Override

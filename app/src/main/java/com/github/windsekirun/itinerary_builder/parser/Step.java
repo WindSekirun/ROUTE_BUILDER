@@ -2,13 +2,14 @@ package com.github.windsekirun.itinerary_builder.parser;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Pyxis on 2016. 10. 20..
  */
-public class Step {
+public class Step implements Serializable{
     private double distance;
     private String endAddressText;
     private LatLng endPosition;

@@ -9,11 +9,23 @@ public class MathUtils {
         return meter * 0.001;
     }
 
+    public static double getKilo(double meter) {
+        return meter * 0.001;
+    }
+
     public static double getFeet(long meter) {
         return meter * 3.281;
     }
 
+    public static double getFeet(double meter) {
+        return meter * 3.281;
+    }
+
     public static double getMiles(long meter) {
+        return getFeet(meter) * 0.00018939;
+    }
+
+    public static double getMiles(double meter) {
         return getFeet(meter) * 0.00018939;
     }
 

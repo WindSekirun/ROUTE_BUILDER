@@ -36,6 +36,7 @@ import com.github.windsekirun.itinerary_builder.parser.RouteException;
 import com.github.windsekirun.itinerary_builder.parser.Routing;
 import com.github.windsekirun.itinerary_builder.parser.RoutingListener;
 import com.github.windsekirun.itinerary_builder.utils.MathUtils;
+import com.github.windsekirun.itinerary_builder.utils.PostServiceExtraUtils;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Places;
@@ -418,10 +419,11 @@ public class MapsActivity extends AppCompatActivity
             holder.duration.setText(stringBuilder.toString());
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @SuppressWarnings("unchecked")
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(MapsActivity.this, RouteModalActivity.class);
-                    intent.putExtra(LEG_OBJECT, leg.second);
+                    PostServiceExtraUtils.getInstance().setItem(leg.second);
                     startActivity(intent);
                 }
             });

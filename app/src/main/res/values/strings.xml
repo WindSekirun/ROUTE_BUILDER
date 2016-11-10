@@ -8,11 +8,12 @@
     <string name="fetching_from_data">Fetching from Data…</string>
     <string name="destination">Destination</string>
     <string name="origin">Origin</string>
-    <string name="description">Description</string>
+    <string name="description">Description (Optional)</string>
     <string name="title">Title</string>
     <string name="save">Save</string>
     <string name="add_waypoint">Add waypoint</string>
     <string name="delete">Delete</string>
     <string name="edit">Edit</string>
     <string name="exceed_limit_waypoint">Exceed limit waypoints!</string>
+    <string name="edit_route">Edit Route</string>
 </resources>

@@ -220,7 +220,7 @@ public class MakeRouteActivity extends AppCompatActivity implements Constants {
 
     @SuppressWarnings("ConstantConditions")
     public void inflateToolbar() {
-        getSupportActionBar().setTitle("경로 수정");
+        getSupportActionBar().setTitle(R.string.edit_route);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 

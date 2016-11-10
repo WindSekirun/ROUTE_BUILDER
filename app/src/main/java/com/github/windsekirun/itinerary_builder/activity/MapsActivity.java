@@ -182,6 +182,7 @@ public class MapsActivity extends AppCompatActivity
                 .withListener(this)
                 .alternativeRoutes(false)
                 .optimize(optimize)
+                .language("en")
                 .waypoints(wayPoints)
                 .key(API_KEY)
                 .build();

@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements Constants {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        getSupportActionBar().setTitle("경로 빌더");
+        getSupportActionBar().setTitle(R.string.app_name);
         inflateFab();
 
         list.setEmptyView(emptyView);
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements Constants {
         list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int pos, long id) {
-                String[] items = new String[]{"수정", "삭제"};
+                String[] items = new String[]{getString(R.string.edit), getString(R.string.delete)};
                 new MaterialDialog.Builder(MainActivity.this)
                         .items(items)
                         .itemsCallback(new MaterialDialog.ListCallback() {

@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item android:id="@+id/menu_add_via"
-        android:title="경유지 추가"
+        android:title="@string/add_waypoint"
         app:showAsAction="always|withText"/>
 
     <item android:id="@+id/menu_added"
-        android:title="경로 저장"
+        android:title="@string/save"
         app:showAsAction="always|withText"/>
 </menu>

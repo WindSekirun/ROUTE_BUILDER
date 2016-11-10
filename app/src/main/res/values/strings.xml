@@ -14,4 +14,5 @@
     <string name="add_waypoint">Add waypoint</string>
     <string name="delete">Delete</string>
     <string name="edit">Edit</string>
+    <string name="exceed_limit_waypoint">Exceed limit waypoints!</string>
 </resources>

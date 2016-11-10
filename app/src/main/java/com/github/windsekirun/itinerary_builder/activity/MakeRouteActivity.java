@@ -237,7 +237,11 @@ public class MakeRouteActivity extends AppCompatActivity implements Constants {
                 onBackPressed();
                 break;
             case R.id.menu_add_via:
-                startPicker(VIA_PICK_CODE);
+                if (viaLocationList.size() <= 22) {
+                    startPicker(VIA_PICK_CODE);
+                } else {
+                    Toast.makeText(MakeRouteActivity.this, R.string.exceed_limit_waypoint, Toast.LENGTH_SHORT).show();
+                }
                 break;
             case R.id.menu_added:
                 if (!title.getText().toString().isEmpty()) {

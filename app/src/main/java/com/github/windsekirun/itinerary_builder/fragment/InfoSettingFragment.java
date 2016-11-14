@@ -27,7 +27,7 @@ public class InfoSettingFragment extends PreferenceFragment {
         openSource.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                String url = "https://gist.github.com/WindSekirun/7edda64a5cbc0dc2381ac5fb218786e9";
+                String url = "http://www.windsekirun.moe/ITINERARY_BUILDER/";
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 i.setData(Uri.parse(url));
                 startActivity(i);

@@ -131,13 +131,11 @@ public class RouteModalActivity extends AppCompatActivity implements Constants {
     }
 
     public class RouteModalViewHolder extends RecyclerView.ViewHolder {
-        ImageView directionIcon;
         TextView routeDesc;
         TextView duration;
 
         public RouteModalViewHolder(View itemView) {
             super(itemView);
-            directionIcon = (ImageView) itemView.findViewById(R.id.directionIcon);
             routeDesc = (TextView) itemView.findViewById(R.id.routeDesc);
             duration = (TextView) itemView.findViewById(R.id.duration);
         }

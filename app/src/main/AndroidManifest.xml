@@ -40,6 +40,8 @@
             android:name=".activity.MakeRouteActivity"
             android:screenOrientation="portrait" />
 
+        <activity android:name=".activity.InfoSettingActvity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.MapsActivity"
             android:screenOrientation="portrait"

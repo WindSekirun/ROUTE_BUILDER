@@ -7,12 +7,16 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.windsekirun.itinerary_builder.Constants;
@@ -113,6 +117,26 @@ public class MainActivity extends AppCompatActivity implements Constants {
         adapter = new RouteListAdapter(MainActivity.this, routeStorage.getRouteModels());
         list.setAdapter(adapter);
         adapter.notifyDataSetChanged();
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+            case R.id.menu_info:
+                Intent intent = new Intent(MainActivity.this, InfoSettingActvity.class);
+                startActivity(intent);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public class RouteListAdapter extends ArrayAdapter<RouteModel> {

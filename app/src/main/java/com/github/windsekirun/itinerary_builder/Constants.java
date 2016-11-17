@@ -12,6 +12,7 @@ public interface Constants {
     String LOCATION_MODEL = packageName + withIntent +  "LOCATION_MODEL";
     String ROUTE_MODEL = packageName + withIntent + "ROUTE_MODEL";
     String CURSOR = packageName + withIntent + "CURSOR";
+    String PAGING = packageName + withIntent + "PAGING";
     int GENERAL_CODE = 72;
     String LEG_OBJECT = packageName + withIntent + "LEG_OBJECT";
 }

@@ -33,14 +33,12 @@
         </activity>
 
         <activity
-            android:name=".activity.RouteModalActivity"
-            android:screenOrientation="portrait" />
-
-        <activity
             android:name=".activity.MakeRouteActivity"
             android:screenOrientation="portrait" />
 
         <activity android:name=".activity.InfoSettingActvity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.RouteViewPager"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.MapsActivity"

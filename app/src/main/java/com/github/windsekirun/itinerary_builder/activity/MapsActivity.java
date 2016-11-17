@@ -1,8 +1,5 @@
 package com.github.windsekirun.itinerary_builder.activity;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -14,12 +11,10 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,7 +44,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -87,11 +81,11 @@ public class MapsActivity extends AppCompatActivity
     RelativeLayout basicInfoView;
     TextView routeTitle;
     TextView timeView;
+    ImageView routeView;
 
     CoordinatorLayout coordinatorLayout;
     View bottomSheet;
     BottomSheetBehavior behavior;
-    LegsModalListAdapter legsModalListAdapter;
     ArrayList<Pair<String, Leg>> itemSet;
     RecyclerView legsList;
     private BottomSheetDialog mBottomSheetDialog;
@@ -190,6 +184,7 @@ public class MapsActivity extends AppCompatActivity
         routing.execute();
     }
 
+    /*
     public void analyzeRouteToList(Route route) {
         itemSet = new ArrayList<>();
 
@@ -221,12 +216,14 @@ public class MapsActivity extends AppCompatActivity
         mBottomSheetDialog = new BottomSheetDialog(this);
         mBottomSheetDialog.setContentView(view);
     }
+    */
 
     @SuppressWarnings("StringBufferReplaceableByString")
-    public void displayBasicInfo(long distance, long duration) {
+    public void displayBasicInfo(final Route route, long distance, long duration) {
         basicInfoView = (RelativeLayout) findViewById(R.id.basicInfoView);
         routeTitle = (TextView) findViewById(R.id.routeTitle);
         timeView = (TextView) findViewById(R.id.timeView);
+        routeView = (ImageView) findViewById(R.id.imageView);
 
         routeTitle.setText(routeModel.getTitle());
         StringBuilder stringBuilder = new StringBuilder();
@@ -256,6 +253,16 @@ public class MapsActivity extends AppCompatActivity
         }
 
         timeView.setText(stringBuilder.toString());
+
+        routeView.setOnClickListener(new View.OnClickListener() {
+            @SuppressWarnings("unchecked")
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MapsActivity.this, RouteViewPager.class);
+                PostServiceExtraUtils.getInstance().setItem(route);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -291,13 +298,6 @@ public class MapsActivity extends AppCompatActivity
 
     @Override
     public void onRoutingSuccess(List<Route> routes, int shortestRouteIndex) {
-        progressDialog.dismiss();
-        CameraUpdate center = CameraUpdateFactory.newLatLng(start);
-        CameraUpdate zoom = CameraUpdateFactory.zoomTo(12);
-
-        map.moveCamera(center);
-        map.moveCamera(zoom);
-
         if (polylines.size() > 0) {
             for (Polyline poly : polylines) {
                 poly.remove();
@@ -320,6 +320,13 @@ public class MapsActivity extends AppCompatActivity
         final Route route = routes.get(0);
         int legSize = route.getLegs().size();
 
+        progressDialog.dismiss();
+        CameraUpdate center = CameraUpdateFactory.newLatLng(route.getLatLgnBounds().getCenter());
+        CameraUpdate zoom = CameraUpdateFactory.zoomTo(10);
+
+        map.moveCamera(center);
+        map.moveCamera(zoom);
+
         for (int i = 0; i < legSize; i++) {
             int colorIndex = i % COLORS.length;
             final Leg leg = route.getLegs().get(i);
@@ -339,20 +346,10 @@ public class MapsActivity extends AppCompatActivity
             }
         }
 
-        analyzeRouteToList(route);
-
-        map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                mBottomSheetDialog.show();
-                return false;
-            }
-        });
-
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                displayBasicInfo(route.getDistance(), route.getDuration());
+                displayBasicInfo(route, route.getDistance(), route.getDuration());
             }
         });
     }
@@ -367,89 +364,5 @@ public class MapsActivity extends AppCompatActivity
         this.map = googleMap;
 
         routingProcess();
-    }
-
-    public class LegsModalListAdapter extends RecyclerView.Adapter<LegsModalViewHolder> {
-        Context c;
-        ArrayList<Pair<String, Leg>> itemSet;
-
-        public LegsModalListAdapter(Context c, ArrayList<Pair<String, Leg>> legs) {
-            this.c = c;
-            this.itemSet = legs;
-        }
-
-        @Override
-        public LegsModalViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new LegsModalViewHolder(View.inflate(c, R.layout.row_maps_leg_item, null));
-        }
-
-        @Override
-        public void onBindViewHolder(LegsModalViewHolder holder, int position) {
-            final Pair<String, Leg> leg = itemSet.get(position);
-            holder.title.setText(leg.first);
-
-            int colorIndex = position % COLORS.length;
-            holder.legColorRoute.setBackgroundColor(ContextCompat.getColor(c, COLORS[colorIndex]));
-
-            StringBuilder stringBuilder = new StringBuilder();
-            int distance = leg.second.getDistanceValue();
-            int duration = leg.second.getDurationValue();
-
-            double distanceToKm = MathUtils.getKilo(distance);
-            double distanceToMile = MathUtils.getMiles(distance);
-            long durationToMin = MathUtils.getMin(duration);
-
-            stringBuilder.append(Math.round(distanceToKm))
-                    .append("km (")
-                    .append(Math.round(distanceToMile))
-                    .append("mi) ");
-
-            if (durationToMin >= 60) {
-                long durationToHour = durationToMin / 60;
-                durationToMin = durationToMin % 60;
-
-                stringBuilder.append(durationToHour)
-                        .append("hour ")
-                        .append(durationToMin)
-                        .append("min");
-            } else {
-                stringBuilder.append(durationToMin)
-                        .append("min");
-            }
-
-            holder.duration.setText(stringBuilder.toString());
-
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @SuppressWarnings("unchecked")
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(MapsActivity.this, RouteModalActivity.class);
-                    PostServiceExtraUtils.getInstance().setItem(leg.second);
-                    startActivity(intent);
-                }
-            });
-        }
-
-        @Override
-        public int getItemCount() {
-            if (itemSet != null && !itemSet.isEmpty()) {
-                return itemSet.size();
-            } else {
-                return 0;
-            }
-        }
-    }
-
-    public class LegsModalViewHolder extends RecyclerView.ViewHolder {
-        TextView title;
-        FrameLayout legColorRoute;
-        TextView duration;
-
-        public LegsModalViewHolder(View itemView) {
-            super(itemView);
-            title = (TextView) itemView.findViewById(R.id.title);
-            legColorRoute = (FrameLayout) itemView.findViewById(R.id.frameLayout);
-            duration = (TextView) itemView.findViewById(R.id.textView3);
-        }
     }
 }

@@ -25,6 +25,7 @@ public class InfoSettingActvity extends AppCompatActivity {
         getFragmentManager().executePendingTransactions();
 
         getSupportActionBar().setTitle("Info");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override

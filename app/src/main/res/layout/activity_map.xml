@@ -26,7 +26,8 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="16dip"
             android:layout_marginRight="16dip"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_toStartOf="@+id/imageView">
 
             <TextView
                 android:id="@+id/routeTitle"
@@ -42,6 +43,14 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="#ffffff" />
         </LinearLayout>
+
+        <ImageView
+            android:layout_width="50dip"
+            android:layout_height="70dip"
+            android:id="@+id/imageView"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/ic_action_maps_directions"
+            android:layout_marginRight="5dip" />
     </RelativeLayout>
 
     <android.support.v4.widget.NestedScrollView

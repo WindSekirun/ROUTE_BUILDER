@@ -49,4 +49,5 @@ dependencies {
     compile 'com.google.android.gms:play-services-maps:9.8.00'
     compile 'com.google.android.gms:play-services-location:9.8.00'
     compile 'com.google.android.gms:play-services-places:9.8.00'
+    compile 'me.relex:circleindicator:1.2.2@aar'
 }

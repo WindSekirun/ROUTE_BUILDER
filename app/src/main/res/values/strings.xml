@@ -16,4 +16,5 @@
     <string name="edit">Edit</string>
     <string name="exceed_limit_waypoint">Exceed limit waypoints!</string>
     <string name="edit_route">Edit Route</string>
+    <string name="cannot_load_route">Cannot load route, please try again</string>
 </resources>

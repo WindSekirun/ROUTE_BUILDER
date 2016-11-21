@@ -2,17 +2,13 @@ package com.github.windsekirun.itinerary_builder.activity;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -45,20 +41,10 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,9 +83,6 @@ public class MapsActivity extends AppCompatActivity
     CoordinatorLayout coordinatorLayout;
     View bottomSheet;
     BottomSheetBehavior behavior;
-    ArrayList<Pair<String, Leg>> itemSet;
-    RecyclerView legsList;
-    private BottomSheetDialog mBottomSheetDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -249,12 +232,12 @@ public class MapsActivity extends AppCompatActivity
 
     @Override
     public void onConnectionSuspended(int i) {
-        // unused methods - notification needed!
+        Toast.makeText(MapsActivity.this, R.string.cannot_load_route, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        // unused methods - notification needed!
+        Toast.makeText(MapsActivity.this, R.string.cannot_load_route, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -336,7 +319,7 @@ public class MapsActivity extends AppCompatActivity
 
     @Override
     public void onRoutingCancelled() {
-        // unused methods - notification needed!
+        Toast.makeText(MapsActivity.this, R.string.cannot_load_route, Toast.LENGTH_SHORT).show();
     }
 
     @Override

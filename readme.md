@@ -33,3 +33,8 @@ This project using many third-party library to make application as quickly as po
 ## Contact
 * E-Mail: windsekirun@gmail.com
 * Twitter: [@WindSekirun](http://twitter.com/windsekirun)
+
+## Pull Request, Issues
+Thanks for your Contributes! Contribute help developer a lot.
+
+Feel free and upload Issue tracker or Pull request. 

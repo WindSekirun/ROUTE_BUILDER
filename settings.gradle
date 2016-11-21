@@ -1,1 +1,1 @@
-include ':app', ':direction-library'
+include ':app'

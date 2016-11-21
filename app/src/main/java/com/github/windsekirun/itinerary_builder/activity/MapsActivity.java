@@ -2,6 +2,7 @@ package com.github.windsekirun.itinerary_builder.activity;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -44,10 +45,20 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -184,40 +195,6 @@ public class MapsActivity extends AppCompatActivity
         routing.execute();
     }
 
-    /*
-    public void analyzeRouteToList(Route route) {
-        itemSet = new ArrayList<>();
-
-        int legSize = route.getLegs().size();
-        for (int i = 0; i < legSize; i++) {
-            Leg leg = route.getLegs().get(i);
-            String title;
-            if (i == 0) {
-                title = routeModel.getStartLocation().getName();
-            } else if (i == legSize - 1) {
-                title = routeModel.getEndLocation().getName();
-            } else {
-                title = routeModel.getLocationRoutes().get(i - 1).getName();
-            }
-            itemSet.add(new Pair<>(title, leg));
-        }
-
-        @SuppressLint("InflateParams") View view = getLayoutInflater().inflate(R.layout.sheet, null);
-
-        legsList = (RecyclerView) view.findViewById(R.id.recyclerView);
-
-        legsModalListAdapter = new LegsModalListAdapter(MapsActivity.this, itemSet);
-        legsList.setLayoutManager(new LinearLayoutManager(MapsActivity.this));
-        legsList.setHasFixedSize(true);
-        legsList.setAdapter(legsModalListAdapter);
-
-        legsModalListAdapter.notifyDataSetChanged();
-
-        mBottomSheetDialog = new BottomSheetDialog(this);
-        mBottomSheetDialog.setContentView(view);
-    }
-    */
-
     @SuppressWarnings("StringBufferReplaceableByString")
     public void displayBasicInfo(final Route route, long distance, long duration) {
         basicInfoView = (RelativeLayout) findViewById(R.id.basicInfoView);
@@ -309,11 +286,13 @@ public class MapsActivity extends AppCompatActivity
         // Start marker
         MarkerOptions options = new MarkerOptions();
         options.position(start);
+        options.title(routeModel.getStartLocation().getAddress());
         map.addMarker(options);
 
         // End marker
         options = new MarkerOptions();
         options.position(end);
+        options.title(routeModel.getEndLocation().getAddress());
         map.addMarker(options);
 
         // We only support first Route!
@@ -341,6 +320,7 @@ public class MapsActivity extends AppCompatActivity
             if (i != legSize - 1) {
                 options = new MarkerOptions();
                 options.position(leg.getEndPosition());
+                options.title(leg.getEndAddressText());
                 options.icon(getMarkerIcon(ContextCompat.getColor(MapsActivity.this, COLORS[colorIndex])));
                 map.addMarker(options);
             }

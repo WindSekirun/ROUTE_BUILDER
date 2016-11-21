@@ -28,7 +28,6 @@ You can find us at http://mis.hannam.ac.kr/main/
 * [WindSekirun](https://github.com/windsekirun) - Palette Team CTO
 
 ## Third-party License
-본 프로젝트는 원활한 개발을 위하여 오픈소스 라이브러리를 적극적으로 활용하고 있습니다. (GPL 라이센싱 된 라이브러리는 사용하지 않습니다.)
 This project using many third-party library to make application as quickly as possible, you can see third-party license document at [here](https://github.com/WindSekirun/ITINERARY_BUILDER/blob/master/third_party.md)
 
 ## Contact

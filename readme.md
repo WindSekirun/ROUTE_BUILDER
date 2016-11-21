@@ -30,6 +30,9 @@ You can find us at http://mis.hannam.ac.kr/main/
 ## Third-party License
 This project using many third-party library to make application as quickly as possible, you can see third-party license document at [here](https://github.com/WindSekirun/ITINERARY_BUILDER/blob/master/third_party.md)
 
+## License
+This application licensed by [MIT License](https://github.com/WindSekirun/ROUTE_BUILDER/blob/master/license.md)
+
 ## Contact
 * E-Mail: windsekirun@gmail.com
 * Twitter: [@WindSekirun](http://twitter.com/windsekirun)

@@ -35,7 +35,7 @@ First, i use this library for implement proto-type, but this library doesn't sup
 
 so, i re-produce this library to support Legs, Steps or others..
 
-You can find re-produce code in [here](https://github.com/WindSekirun/ROUTE_BUILDER/tree/master/app/src/main/java/com/github/windsekirun/itinerary_builder/parser). Thanks for make great library!
+You can find re-produced code in [here](https://github.com/WindSekirun/ROUTE_BUILDER/tree/master/app/src/main/java/com/github/windsekirun/itinerary_builder/parser). Thanks for make great library!
 
 ## License
 This application licensed by [MIT License](https://github.com/WindSekirun/ROUTE_BUILDER/blob/master/license.md)
